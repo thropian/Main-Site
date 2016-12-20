@@ -1,0 +1,79 @@
+<html>
+<head>
+<title>Converter</title>
+<link rel="shortcut icon" href="https://www.dropbox.com/static/31335/images/favicon.ico"/>
+</head>
+<body>
+<a href=index.html>Back</a>
+<div align="center"><form name = "All">
+<select name="UnitCatagory" onChange="ChangeCatagory()"></select><br/>
+<textarea name="NumberA" rows="2" cols="30" onKeyUp="Convert('A')"></textarea><textarea name="NumberB" rows="2" cols="30" onKeyUp="Convert('B')"></textarea><br/>
+<select name="UnitsA"></select><select name="UnitsB"></select><br/>
+</form></div>
+
+<SCRIPT LANGUAGE="Javascript">
+Catagories = ["Distance","Volume","Weight","Time","Temperature"]
+x=0
+while(x<Catagories.length){
+document.All.UnitCatagory.options[document.All.UnitCatagory.length] = new Option(Catagories[x],Catagories[x],false,false)
+x+=1
+}
+ChangeCatagory()
+
+function ChangeCatagory(){
+type =  document.All.UnitCatagory.options[document.All.UnitCatagory.selectedIndex].text
+if(type == "Distance"){Units = [["Meter",1609.34],["Mile",1],["Yard",1760],["Foot",5280],["Inch",63360]]}
+else if(type == "Volume"){Units = [["Liter",3.78541],["Gallon",1],["Quart",4],["Pint",8],["Cup",16],["Fluid Ounce",128]]}
+else if(type == "Weight"){Units = [["Gram",1000000],["Ton",1],["Pound",2204.62],["Ounce",35274]]}
+else if(type == "Time"){Units = [["Year",1],["Month",12],["Week",52],["Day",365.25],["Hour",365.25*24],["Minute",365.25*24*60],["Second",365.25*24*60*60]]}
+else if(type == "Temperature"){Units = [["Kelvin",1],["Celsius",1],["Fahrenheit",1]]}
+else{Units = ["Other"]}
+x=0
+document.All.UnitsA.length = 0
+document.All.UnitsB.length = 0
+while(x<Units.length){
+document.All.UnitsA.options[document.All.UnitsA.length] = new Option(Units[x][0],Units[x][1],false,false)
+document.All.UnitsB.options[document.All.UnitsB.length] = new Option(Units[x][0],Units[x][1],false,false)
+x+=1
+}}
+
+function Convert(side){
+a = document.All.UnitsA.options[document.All.UnitsA.selectedIndex].value
+b = document.All.UnitsB.options[document.All.UnitsB.selectedIndex].value
+if(side == "A"){
+num = parseFloat(document.All.NumberA.value)
+document.All.NumberB.value= num*(b/a)
+if(type=="Temperature"){
+a = document.All.UnitsA.options[document.All.UnitsA.selectedIndex].text
+b = document.All.UnitsB.options[document.All.UnitsB.selectedIndex].text
+if(a=="Fahrenheit"){
+num-=32
+num/=1.8}
+if(a=="Kelvin"){num-=273}
+if(b=="Fahrenheit"){
+num*=1.8
+num+=32}
+if(b=="Kelvin"){num+=273}
+document.All.NumberB.value = num
+}}
+if(side == "B"){
+num = parseFloat(document.All.NumberB.value)
+document.All.NumberA.value= num*(a/b)
+if(type=="Temperature"){
+b = document.All.UnitsA.options[document.All.UnitsA.selectedIndex].text
+a = document.All.UnitsB.options[document.All.UnitsB.selectedIndex].text
+if(a=="Fahrenheit"){
+num-=32
+num/=1.8}
+if(a=="Kelvin"){num-=273}
+if(b=="Fahrenheit"){
+num*=1.8
+num+=32}
+if(b=="Kelvin"){num+=273}
+document.All.NumberA.value = num
+}}
+}
+
+</SCRIPT>
+</body>
+</html>

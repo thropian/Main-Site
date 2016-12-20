@@ -1,0 +1,158 @@
+<html>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<head>
+<title>Pong</title>
+<link rel="shortcut icon" href="https://www.dropbox.com/static/31335/images/favicon.ico"/>
+</head>
+<body>
+<Style>
+body{
+background-color:black;
+}
+</Style>
+
+<a href=index.html>Back</a><br/>
+
+<div align="center"><canvas id="canvas" width=600 height=350>HTML5</canvas></div><br/>
+
+<SCRIPT LANGUAGE="Javascript">
+document.onkeyup=Release
+document.onkeydown=Press
+
+ball = new Object()
+ball.x = 300
+ball.y = 175
+ball.speed = 2
+if(Math.random()>.5){
+ball.angle = 0}
+else{
+ball.angle = Math.PI}
+
+player1 = new Object()
+player1.x = 20
+player1.y = 175
+player1.score = 0
+
+player2 = new Object()
+player2.x = 580
+player2.y = 175
+player2.score = 0
+
+key = new Object()
+key.up = false
+key.down = false
+key.w = false
+key.s = false
+
+function Line(direction){
+return [Math.cos(direction),-Math.sin(direction)]}
+
+function Angle(x,y){
+dot = Math.sqrt((y*y)+(x*x))
+angleY = Math.asin(y/dot)
+angleX = Math.acos(x/dot)
+if(angleY > 0){
+return 2*Math.PI-angleX}
+else{
+return angleX}
+}
+
+function Draw(){
+back = document.getElementById("canvas").getContext("2d")
+back.clearRect(0, 0, 600, 350);
+back.fillStyle = "#808080"
+back.fillRect(0,0,1000,1000)
+back.fillStyle = "#000000"
+back.font = 'bold 30px sans-serif'
+back.textBaseline = "middle"
+back.fillText(String(player1.score),270,30,30)
+back.fillText(String(player2.score),330,30,30)
+back.fillRect(ball.x-3,ball.y-3,6,6)
+back.fillRect(player1.x-1,player1.y-25,2,50)
+back.fillRect(player2.x-1,player2.y-25,2,50)
+back.stroke()
+}
+
+function Ball(){
+move = Line(ball.angle)
+if(ball.speed>7.5){ball.speed=7.5}
+<!--document.textform.Try.value = ball.speed
+ball.x += move[0]*ball.speed
+ball.y += move[1]*ball.speed
+if(player1.x-3<ball.x && ball.x<player1.x+3 && player1.y-25<ball.y && ball.y<player1.y+25){
+ball.speed += .05
+temp = Angle(5,ball.y-player1.y)
+ball.angle = temp
+}
+if(player2.x-3<ball.x && ball.x<player2.x+3 && player2.y-25<ball.y && ball.y<player2.y+25){
+ball.speed += .05
+temp = Angle(-5,ball.y-player2.y)
+ball.angle = temp
+}
+if(ball.y>=347){
+temp = Line(ball.angle)
+temp[1] = -temp[1]
+ball.angle = Angle(temp[0],temp[1])
+}
+if(ball.y<=3){
+temp = Line(ball.angle)
+temp[1] = -temp[1]
+ball.angle = Angle(temp[0],temp[1])
+}
+
+if(ball.x<5 || 595<ball.x){
+if(ball.x<5){
+ball.angle = 0
+player2.score += 1
+}
+else{
+ball.angle = Math.PI
+player1.score += 1
+}
+ball.x = 300
+ball.y = 175
+ball.speed = 2
+player1.x = 20
+player1.y = 175
+player2.x = 580
+player2.y = 175}
+}
+
+function Player1(){
+if(key.w && player1.y > 25){
+player1.y -= 2}
+if(key.s && player1.y < 325){
+player1.y += 2}
+}
+
+function Player2(){
+if(key.up && player2.y > 25){
+player2.y -= 2}
+if(key.down && player2.y < 325){
+player2.y += 2}
+}
+
+function Press(e){
+button = (window.event) ? event.keyCode : e.keyCode
+if(button==38){key.up=true}
+if(button==40){key.down=true}
+if(button==83){key.s=true}
+if(button==87){key.w=true}
+}
+
+function Release(e){
+button = (window.event) ? event.keyCode : e.keyCode
+if(button==38){key.up=false}
+if(button==40){key.down=false}
+if(button==83){key.s=false}
+if(button==87){key.w=false}
+}
+
+setInterval("Draw()",1)
+setInterval("Ball()",5)
+setInterval("Player1()",10)
+setInterval("Player2()",10)
+
+</SCRIPT>
+</body>
+</html>

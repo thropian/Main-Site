@@ -1,0 +1,37 @@
+<html>
+<style>
+.Field{
+background-color:black;
+z-index:-10;
+}
+.flip {
+        -moz-transform: scaleX(-1);
+        -o-transform: scaleX(-1);
+        -webkit-transform: scaleX(-1);
+        transform: scaleX(-1);
+        filter: FlipH;
+        -ms-filter: "FlipH";
+}
+.normal {}
+</style><body>
+<div id="container" class="Field" style="width:1000px; height:400; position:absolute; left:0px; top:0px">
+<img src="img_trans.gif" class="normal" id="Mario" style="width:50; height:50; position:absolute; left:0px; top:50px; background:url('Mario.png'); background-position: 0px 0px; background-size: 600% 100%;"/>
+
+<script type="text/javascript" src="https://dl.dropboxusercontent.com/u/63668080/Functions.js"></script>
+
+<script type="text/javascript">
+Player = new Object()
+Player.dead = false
+Player.ChangeY = 0
+Player.Img = 1
+Player.X = 0
+Player.Y = 350
+Player.Frame = 0
+Player.Direction = "normal"
+
+document.write('<script type="text/javascript" src="Player.js"></scr'+'ipt>')
+document.write('<script type="text/javascript" src="Shell.js"></scr'+'ipt>')
+document.write('<script type="text/javascript" src="QA.js"></scr'+'ipt>')
+</SCRIPT>
+</body>
+</html>

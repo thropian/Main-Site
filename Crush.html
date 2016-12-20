@@ -1,0 +1,280 @@
+<html>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<head>
+<title>Crush</title>
+<link rel="shortcut icon" href="https://www.dropbox.com/static/31335/images/favicon.ico"/>
+</head>
+<body>
+<a href=index.html>Back</a><br/>
+
+<div style="float:left"><canvas id="canvas" width=500 height=600>HTML5</canvas></div>
+<div style="float:left"><form name="textform">
+Columns= <input type="text" id="Width" size=3 value=16> (Max 18)<br/>
+Rows=    <input type="text" id="Height" size=3 value=6>
+</textarea></form><br/>
+Instructions: Space=start, R=restart<br/>
+left/a=move left, right/d=move right<br/><br/>
+Win condition: All blocks are hit or below screen<br/>
+Lose condition: A block touches the player paddle<br/><br/>
+Note: The ball does NOT have to remain on screen. Once the game is complete that will be nigh impossible.</div>
+
+
+<SCRIPT LANGUAGE="Javascript">
+document.onkeyup=Release
+document.onkeydown=Press
+
+Swarm = new Object()
+Swarm.Swarm = []
+Swarm.Direction = "Right"
+Swarm.Speed = 0
+Swarm.Drop = function(){
+x = 0
+while(x<Swarm.Swarm.length){
+if(Swarm.Swarm[x].Alive){Swarm.Swarm[x].Y += 5}
+x += 1}
+Swarm.Direction = ["Left","Right"][["Right","Left"].indexOf(Swarm.Direction)]
+}
+Swarm.Move = function(){
+x = 0
+drop = false
+Alive = 0
+while(x<Swarm.Swarm.length){
+if(Swarm.Swarm[x].Alive){
+Alive += 1
+if(Swarm.Direction == "Left"){Swarm.Swarm[x].X -= Swarm.Speed}
+if(Swarm.Direction == "Right"){Swarm.Swarm[x].X += Swarm.Speed}
+if(Swarm.Swarm[x].X < (Swarm.Swarm[x].Width/2) || Swarm.Swarm[x].X > Canvas.X-(Swarm.Swarm[x].Width/2)){drop = true}
+Drawings[Swarm.Swarm[x].List][0] = Swarm.Swarm[x].X
+Drawings[Swarm.Swarm[x].List][1] = Swarm.Swarm[x].Y
+if(Swarm.Swarm[x].Y>Canvas.Y){
+Drawings[Swarm.Swarm[x].List] = [0,0,0,0]
+Swarm.Swarm[x].X = 0
+Swarm.Swarm[x].Y = 0
+Swarm.Swarm[x].Width = 0
+Swarm.Swarm[x].Height = 0
+Swarm.Swarm[x].Alive = false
+clearInterval(Swarm.Swarm[x].Timers[0])}
+}
+x+=1
+}
+if(drop){Swarm.Drop()}
+if(Alive == 0){
+alert("You win!")
+x = 0
+while(x<Timers.length){
+clearInterval(Timers[x])
+x += 1}
+x = 0
+while(x<Swarm.Swarm.length){
+clearInterval(Swarm.Swarm[x].Timers[0])
+x += 1}
+}
+}
+
+
+function Spawn(X,Y,width,height){
+this.X = X
+this.Y = Y
+this.Width = width
+this.Height = height
+this.Timers = []
+this.Alive = true
+this.List = Drawings.length
+Drawings.push([X,Y,width,height])
+this.id = Swarm.Swarm.length
+Swarm.Swarm.push(this)
+}
+
+Spawn.prototype.Hit = function(){
+if(this.X-(this.Width/2)-3<ball.X && ball.X<this.X+(this.Width/2)+3 && this.Y-(this.Height/2)-3<ball.Y && ball.Y<this.Y+(this.Height/2)+3){
+temp = Line(ball.Angle)
+angle = Angle(this.X-ball.X,this.Y-ball.Y)
+angle = angle*180/Math.PI
+if(26.565<angle && angle<153.435 || 206.565<angle && angle<333.435){temp[1] = -temp[1]}
+else{temp[0] = -temp[0]}
+temp = Angle(temp[0],temp[1])
+ball.Angle = temp
+Drawings[this.List] = [0,0,0,0]
+this.X = 0
+this.Y = 0
+this.Width = 0
+this.Height = 0
+this.Alive = false
+clearInterval(this.Timers[0])
+}
+
+if(this.X-(this.Width/2)-25<player.X && player.X<this.X+(this.Width/2)+25 && this.Y-(this.Height/2)-1<player.Y && player.Y<this.Y+(this.Height/2)+1){
+x = 0
+while(x<Timers.length){
+clearInterval(Timers[x])
+x += 1}
+x = 0
+while(x<Swarm.Swarm.length){
+clearInterval(Swarm.Swarm[x].Timers[0])
+x += 1}
+alert("You lose!")
+}
+}
+
+Spawn.prototype.Start = function(){
+a = setInterval("Swarm.Swarm["+this.id+"].Hit()",1)
+this.Timers.push(a)
+}
+
+
+function Restart(){
+Canvas = {"X":500,"Y":600}
+
+Drawings = [[Canvas.X/2,Canvas.Y-28,6,6],[Canvas.X/2,Canvas.Y-25,50,2]]
+
+ball = new Object()
+ball.X = Canvas.X/2
+ball.Y = Canvas.Y-28
+ball.Speed = 0
+ball.Angle = 3*Math.PI/2
+ball.List = 0
+
+player = new Object()
+player.X = Canvas.X/2
+player.Y = Canvas.Y-25
+player.List = 1
+
+key = new Object()
+key.Left = false
+key.Right = false
+
+//x = 50
+//while(x<Canvas.X-50){//Canvas.X=500, 500-50-50'x'=400, 400/25=16
+//y = 20
+//while(y<110){//110-20=90, 90/15=6
+//var enemy = new Spawn(x,y,20,10)
+//enemy.Start()
+//y += 15}
+//x += 25}
+
+
+if(typeof(Timers) !== 'undefined'){
+x = 0
+while(x<Timers.length){
+clearInterval(Timers[x])
+x += 1}
+x = 0
+while(x<Swarm.Swarm.length){
+clearInterval(Swarm.Swarm[x].Timers[0])
+x += 1}
+Swarm.Swarm = []
+Swarm.Direction = "Right"
+Swarm.Speed = 0
+}
+
+W = parseInt(document.getElementById("Width").value)-1
+if(W>18){W=18}
+H = parseInt(document.getElementById("Height").value)-1
+L = (Canvas.X-W*25)/2
+T = 20
+x = 0
+while(x<=W){
+y = 0
+while(y<=H){
+var enemy = new Spawn(L+x*25,T+y*15,20,10)
+enemy.Start()
+y+=1}
+x+=1}
+
+Timers = []
+Timers.push(setInterval("Draw()",1))
+Timers.push(setInterval("Ball()",5))
+Timers.push(setInterval("Player()",5))
+Timers.push(setInterval("Swarm.Move()",10))
+}
+
+function Line(direction){
+return [Math.cos(direction),-Math.sin(direction)]}
+
+function Angle(x,y){
+dot = Math.sqrt((y*y)+(x*x))
+angleY = Math.asin(y/dot)
+angleX = Math.acos(x/dot)
+if(angleY > 0){
+return 2*Math.PI-angleX}
+else{
+return angleX}
+}
+
+function Draw(){
+back = document.getElementById("canvas").getContext("2d")
+back.clearRect(0,0,500,600)
+back.fillStyle = "#808080"
+back.fillRect(0,0,Canvas.X,Canvas.Y)
+back.fillStyle = "#000000"
+part = 0
+while(part<Drawings.length){
+temp = Drawings[part]
+x1 = temp[0]-(temp[2]/2)
+y1 = temp[1]-(temp[3]/2)
+x2 = temp[2]
+y2 = temp[3]
+back.fillRect(x1,y1,x2,y2)
+part += 1}
+}
+
+function Ball(){
+move = Line(ball.Angle)
+ball.X += move[0]*ball.Speed
+ball.Y += move[1]*ball.Speed
+if(player.X-28<ball.X && ball.X<player.X+28 && player.Y-3<ball.Y && ball.Y<player.Y+3){
+temp = Angle(ball.X-player.X,-10)
+ball.Angle = temp
+}
+if(ball.X<=3 || ball.X>=Canvas.X-3){
+temp = Line(ball.Angle)
+temp[0] = -temp[0]
+ball.Angle = Angle(temp[0],temp[1])
+}
+if(ball.Y<=3){
+temp = Line(ball.Angle)
+temp[1] = -temp[1]
+ball.Angle = Angle(temp[0],temp[1])
+}
+if(ball.Y>=Canvas.Y+6){
+ball.Speed = 0
+ball.Angle = 3*Math.PI/2
+ball.X = -3
+ball.Y = -3
+}
+Drawings[ball.List][0] = ball.X
+Drawings[ball.List][1] = ball.Y
+}
+
+function Player(){
+if(key.Left && player.X > 25){
+player.X -= 2}
+if(key.Right && player.X < Canvas.X-25){
+player.X += 2}
+Drawings[player.List][0] = player.X
+Drawings[player.List][1] = player.Y
+}
+
+function Press(e){
+button = (window.event) ? event.keyCode : e.keyCode
+if(button==37||button==65){key.Left=true}//'left' or 'a'
+if(button==39||button==68){key.Right=true}//'right' or 'd'
+if(button==32 && Swarm.Speed==0){//'space'
+ball.Speed = 3
+Swarm.Speed = 1
+}
+if(button==82){//'r'
+Restart()
+}
+}
+
+function Release(e){
+button = (window.event) ? event.keyCode : e.keyCode
+if(button==37||button==65){key.Left=false}
+if(button==39||button==68){key.Right=false}
+}
+
+Restart()
+</SCRIPT>
+</body>
+</html>

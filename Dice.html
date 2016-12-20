@@ -1,0 +1,47 @@
+<html>
+<head>
+<title>Dice</title>
+<link rel="shortcut icon" href="https://www.dropbox.com/static/31335/images/favicon.ico"/>
+</head>
+<body>
+<a href=index.html>Back</a><br/>
+<form name="textform">
+<textarea name = "Dice" rows="1" cols="10" autofocus>1d6</textarea>
+<input type="Button" value="Roll" onMouseUp="Roll()"></input>
+<textarea name = "Result" rows="3" cols="15" readonly>Results here</textarea>
+<SCRIPT LANGUAGE="Javascript">
+
+function Roll(){
+dice = document.textform.Dice.value
+mod = 0
+range = dice.split("d")
+back = range[1]
+x = 0
+while(x<back.length){
+if(back.charAt(x) == "+"){
+back = [back.substring(0,x),back.substring(x+1,back.length)]
+range[1] = parseInt(back[0])
+mod = parseInt(back[1])
+break}
+if(back.charAt(x) == "-"){
+back = [back.substring(0,x),back.substring(x+1,back.length)]
+range[1] = parseInt(back[0])
+mod = -1 * parseInt(back[1])
+break}
+x+=1}
+if(mod>=0){
+Mod = mod
+ModSign = "+"}
+else{
+Mod = -mod
+ModSign = "-"}
+max = parseInt(range[1])
+min = parseInt(range[0])
+max = max*min
+result = Math.floor(Math.random()*(max-min+1))+min
+document.textform.Result.value = min+" to "+max+" "+ModSign+" "+Mod+"\n"+result+" "+ModSign+" "+Mod+"\n"+(result+mod)
+}
+
+</SCRIPT>
+</body>
+</html>

@@ -1,0 +1,150 @@
+<html>
+<head>
+<title>Adventure!</title>
+</head>
+<style>
+.flip {
+        -moz-transform: scaleX(-1);
+        -o-transform: scaleX(-1);
+        -webkit-transform: scaleX(-1);
+        transform: scaleX(-1);
+        filter: FlipH;
+        -ms-filter: "FlipH";
+}
+.normal {}
+a:visited{color:yellow}
+</style>
+<body style="background:url('Terrains/Backdrop.png')" oncontextmenu="return false;">
+
+<script type="text/javascript" src="Players.js"></script>
+<script type="text/javascript" src="Physics.js"></script>
+
+<SCRIPT LANGUAGE="Javascript">
+if(!Array.indexOf){
+Array.prototype.indexOf = function(obj){
+i=0
+while(i<this.length){
+if(this[i]==obj){return i}
+i += 1}
+return -1}}
+
+function FromURL(name){
+temp = String(window.location)
+if(temp.indexOf(name)==-1){return(-1)}
+temp = temp.substring(temp.indexOf(name)+name.length+1,temp.length)
+if(temp.indexOf("&") != -1){temp = temp.substring(0,temp.indexOf("&"))}
+return(temp)
+}
+
+function MakeScreen(x,y){
+temp = document.createElement("a")
+temp.style.position = "absolute"
+temp.style.width = x+"px"
+temp.style.height = y+"px"
+document.body.appendChild(temp)
+}
+
+function MakePortal(x,y,dir){
+temp = document.createElement("img")
+temp.className = "Portal"
+temp.src = "Sprites/Portal"+dir+".png"
+temp.style.position = "absolute"
+temp.style.left = x+"px"
+temp.style.top = y+"px"
+if(dir == "U"){
+temp.style.height = "100px"
+temp.style.width = "300px"}
+else{
+temp.style.height = "300px"
+temp.style.width = "100px"}
+document.body.appendChild(temp)
+}
+
+function MakeText(x,y,text,w){
+temp = document.createElement("a")
+temp.style.position = "absolute"
+temp.style.left = x+"px"
+temp.style.top = y+"px"
+temp.style.color = "white"
+if(w){temp.style.width = w+"px"}
+temp.innerHTML = text
+document.body.appendChild(temp)
+}
+
+function MakeWall(x,y,w,h,type,name){
+temp = document.createElement("img")
+temp.className = "Wall"
+if(name){temp.name = name}
+temp.src = "Terrains/FighterArcherMage.png"
+temp.style.background = "url('Terrains/"+type+".png')"
+temp.style.position = "absolute"
+temp.style.width = w+"px"
+temp.style.height = h+"px"
+temp.style.left = x+"px"
+temp.style.top = y+"px"
+document.body.appendChild(temp)
+}
+
+function MakeLever(x,y,id){
+temp = document.createElement("img")
+temp.className = "Lever"
+temp.id = id
+temp.src = "Sprites/img_trans.gif"
+temp.style.position = "absolute"
+temp.style.width = "20px"
+temp.style.height = "20px"
+temp.style.left = (x-10)+"px"
+temp.style.top = (y-10)+"px"
+temp.style.background = "url('Sprites/Lever.png')"
+temp.style.backgroundSize = "200% 100%"
+temp.style.backgroundPosition = "0px 0px"
+document.body.appendChild(temp)
+}
+
+function MakeBox(x,y,w,h,type,sides){
+if(!sides){sides = ""}
+if(sides.indexOf("t")==-1){MakeWall(x,y,w,4,type)}
+if(sides.indexOf("l")==-1){MakeWall(x,y,4,h,type)}
+if(sides.indexOf("r")==-1){MakeWall(x+w,y,4,h+4,type)}
+if(sides.indexOf("b")==-1){MakeWall(x,y+h,w,4,type)}
+}
+
+function MakeStairsR(x,y,w,h,type,name){
+w = w/(h/5)
+for(c=0;c<=h;c+=5){
+if(name){MakeWall(x+w*(c/5),y-c,w,c,type,name)}
+else{MakeWall(x+w*(c/5),y-c,w,c,type)}
+}}
+
+<!--Stairs let you walk through the ceiling.-->
+
+function MakeStairsL(x,y,w,h,type,name){
+w = w/(h/5.0)
+for(c=0;c<=h;c+=5){
+if(name){MakeWall(x+w*(c/5),y+c-h,w,h-c,type,name)}
+else{MakeWall(x+w*(c/5),y+c-h,w,h-c,type)}
+}}
+
+Levels = ["1","2","3","Test"]
+
+function NextLevel(){
+temp = String(window.location)
+if(temp.indexOf("?") != -1){temp = temp.slice(0,temp.indexOf("?"))}
+window.location.replace(temp+"?level="+Levels[Levels.indexOf(Level)+1])
+}
+
+Level = FromURL("level")
+if(Level == -1){Level = Levels[0]}
+temp = document.createElement("script")
+temp.type = "text/javascript"
+temp.src = Level+".js"
+document.body.appendChild(temp)
+
+console.log("Welcome console user. Bet you're here to play with the code, eh?\nVariables to play with right now are:\n'Fighter.X'/'Fighter.Y' to move the fighter around.\n'Archer.X'/'Archer.Y' to move the archer around.\n'Mage.X'/'Mage.Y' to move the mage around.\n'Jump' (default 21) controls jump height. This is quadratic, so +/- 1 makes a lot of difference.\n'WalkSpeed' (default 7) controls how fast you move left/right.\n'Gravity' (default 1) controls how quickly you fall down.\n\nOr maybe you came here looking for controls. W to jump, A & D to walk left & right, 1/2/3 to control the Fighter/Archer/Mage, and E to flip levers.\nFighter can pass through anything with RED in it, Archer through GREENs, and Mage through BLUEs.\nOh, and the Archer gets a jump boost when near the Fighter.")
+</SCRIPT>
+
+<a href="http://www.technomancycomic.com/" style="position:absolute;top:820px;left:10px;z-index:999;">Art: Koltin Dewitt</a>
+<a href="http://www.bit.ly/thropian" style="position:absolute;top:840px;left:10px;z-index:999;">Programming: Roy Walls</a>
+
+</body>
+</html>

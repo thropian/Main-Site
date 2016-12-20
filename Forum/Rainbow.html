@@ -1,0 +1,59 @@
+<html>
+<head>
+<title>Rainbow</title>
+<link rel="shortcut icon" href="https://www.dropbox.com/static/31335/images/favicon.ico"/>
+</head>
+<body>
+
+<a href=../index.html>Back</a>
+
+<form name="textform">
+<textarea name="textarea" rows="15" cols="100" autofocus>
+</textarea>
+<div id="content">
+<font color=red>T</font><font color=#FF8800>h</font><font color=yellow>i</font><font color=#00FF00>s</font> <font color=blue>i</font><font color=#8800FF>s</font> <font color=#FF00FF>a</font><font color=red>n</font> <font color=#FF8800>e</font><font color=yellow>x</font><font color=#00FF00>a</font><font color=blue>m</font><font color=#8800FF>p</font><font color=#FF00FF>l</font><font color=red>e</font><font color=#FF8800>.</font></div>
+</form><br/>
+
+<input type="button" onMouseUp="test()" value="Color!">
+
+<SCRIPT LANGUAGE="Javascript">
+colors = ["[color=red]","[color=#FF8800]","[color=yellow]","[color=#00FF00]","[color=blue]","[color=#8800FF]","[color=#FF00FF]"]
+
+colors2 = ["<font color=red>","<font color=#FF8800>","<font color=yellow>","<font color=#00FF00>","<font color=blue>","<font color=#8800FF>","<font color=#FF00FF>"]
+
+function test()
+{
+Phrase = document.textform.textarea.value
+document.textform.textarea.value = '[url='+document.URL+']'
+temp = ""
+color = 0
+x = 0
+while(x<Phrase.length)
+	{
+	if(Phrase.charAt(x) != " " && Phrase.charAt(x) != "\n")
+		{
+		document.textform.textarea.value += colors[color]+Phrase.charAt(x)+"[/color]"
+		temp += colors2[color]+Phrase.charAt(x)+"</font>"
+		color += 1
+		if(color >= 7)
+			{
+			color = 0
+			}
+		}
+	else
+		{
+		document.textform.textarea.value += Phrase.charAt(x)
+		if(Phrase.charAt(x) == "\n"){
+			temp += "<br/>"}
+		else{temp+=" "}
+		}
+	x += 1
+	}
+document.getElementById("content").innerHTML = temp
+document.textform.textarea.value += "[/url]"
+document.textform.textarea.select()
+}
+
+</SCRIPT>
+</body>
+</html>

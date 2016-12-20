@@ -1,0 +1,112 @@
+<style>
+textarea{resize:none;}
+</style>
+
+<html>
+<head>
+<title>Polynomial</title>
+<link rel="shortcut icon" href="https://www.dropbox.com/static/31335/images/favicon.ico"/>
+</head>
+<body>
+<a href=index.html>Back</a><br/>
+<input type="text" id="a" size="2" value=0>
+x<sup>2</sup>+
+<input type="text" id="b" size="2" value=0>
+x+
+<input type="text" id="c" size="2" value=0>
+=0<br/>
+<input type="button" onMouseUp="SolveA()" value="Factor!">x=<textarea id="x1" rows=1 cols=3 readonly></textarea><br/>
+<input type="button" onMouseUp="SolveB()" value="Quadratic Equation!">x=<textarea id="x2" rows=1 cols=1 readonly></textarea><br/>
+<textarea id="answer" rows=1 cols=6 readonly>Answer</textarea>
+<SCRIPT LANGUAGE="Javascript">
+function Factor(num){
+	if(num==0){return []}
+	factors = []
+	x = -num
+	while(x!=num+(num/Math.abs(num))){
+		if(x==0){x+=(num/Math.abs(num))}
+		if(num%x==0){factors.push([x,num/x])}
+		x+=(num/Math.abs(num))}
+	return factors}
+
+function SolveA(){
+	A = parseInt(document.getElementById("a").value,10)
+	B = parseInt(document.getElementById("b").value,10)
+	C = parseInt(document.getElementById("c").value,10)
+	fA = Factor(A)
+	fC = Factor(C)
+	Answer = document.getElementById("answer")
+	XValue = document.getElementById("x1")
+	Answer.value = ""
+	XValue.value = ""
+	rows = 0
+	cols = 0
+	x = 0
+	possibleX = []
+	while(x<fA.length){
+		y = 0
+		while(y<fC.length){
+			if(fA[x][0]*fC[y][1]+fA[x][1]*fC[y][0] == B){
+				temp = "("+fA[x][0]+"x+"+fC[y][0]+")("+fA[x][1]+"x+"+fC[y][1]+")=0::::x="+(-fC[y][1]/fA[x][1])+","+(-fC[y][0]/fA[x][0])+"\n"
+				possibleX.push(-fC[y][0]/fA[x][0])
+				possibleX.push(-fC[y][1]/fA[x][1])
+				Answer.value = temp+Answer.value
+				if(temp.length>cols){
+					cols = temp.length
+					}
+				rows += 1
+				}
+			y+=1
+			}
+		x+=1
+		}
+	if(rows == 0){
+		Answer.value = "No solution"
+		Answer.rows = 1
+		Answer.cols = 11
+		}
+	else{
+		Answer.value = Answer.value.substring(0,Answer.value.length-1)
+		Answer.rows = rows
+		Answer.cols = cols
+		possibleX.sort()
+		X = []
+		x = 0
+		while(x<possibleX.length){
+			if(possibleX[x]!=X[X.length-1]){X.push(possibleX[x])}
+			x+=1}
+		XValue.value = X
+		XValue.cols = XValue.value.length
+		}
+	}
+
+function SolveB(){
+	A = parseInt(document.getElementById("a").value,10)
+	B = parseInt(document.getElementById("b").value,10)
+	C = parseInt(document.getElementById("c").value,10)
+	XValue = document.getElementById("x2")
+	XValue.value = ""
+	sqrt = B*B-4*A*C
+	XValue.rows = 1
+	if(sqrt<0){
+		sqrt = -sqrt
+		if(Math.sqrt(sqrt)==parseInt(Math.sqrt(sqrt))){
+			XValue.value = "("+(-B)+"+"+Math.sqrt(sqrt)+"i)/"+(2*A)+","+"("+(-B)+"-"+Math.sqrt(sqrt)+"i)/"+(2*A)}
+		else{
+			XValue.value = "("+(-B)+"+sqrt("+sqrt+")i)/"+(2*A)+",("+(-B)+"-sqrt("+sqrt+")i)/"+(2*A)}
+		}
+	else if(sqrt>0){
+		if(Math.sqrt(sqrt)==parseInt(Math.sqrt(sqrt))){
+			XValue.value = (-B+Math.sqrt(sqrt))/(2*A)+","+(-B-Math.sqrt(sqrt))/(2*A)}
+		else{
+			XValue.value = "("+(-B)+"+sqrt("+sqrt+"))/"+(2*A)+",("+(-B)+"-sqrt("+sqrt+"))/"+(2*A)}
+		}
+	else{
+		XValue.value = -B/(2*A)
+		}
+	XValue.cols = XValue.value.length
+	}
+
+</SCRIPT>
+</body>
+</html>

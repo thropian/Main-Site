@@ -1,0 +1,106 @@
+<html>
+<head>
+<title>Translator</title>
+<link rel="shortcut icon" href="https://www.dropbox.com/static/31335/images/favicon.ico"/>
+</head>
+<body>
+
+<a href=index.html>Back</a><br/>
+<div align="center"><form name = "All">
+<textarea name="Words" rows="15" cols="50"></textarea>
+<select name="Number">
+</select>
+<textarea name="Bits" rows="15" cols="50"></textarea><br/>
+<input type="button" onMouseUp="ToBits()" value="From Text.">
+<input type="button" onMouseUp="FromBits()" value="To Text.">
+</form></div>
+<SCRIPT LANGUAGE="Javascript">
+
+StringIndex = function(str,word){
+i = 0
+while(i+word.length<=str.length){
+if(str.substring(i,i+word.length)==word){return i}
+i += 1}
+return -1}
+
+x = 2
+while(x<=64){
+document.All.Number.options[document.All.Number.length] = new Option(x,x,false,false)
+x+=1
+}
+
+function ToBits(){
+document.All.Bits.value = ""
+words = document.All.Words.value
+base = document.All.Number.options[document.All.Number.selectedIndex].text
+base = parseInt(base)
+if(base>=16){lengthy=2}
+else if(base>=7){lengthy=3}
+else if(base>=4){lengthy=4}
+else if(base==3){lengthy=6}
+else{lengthy=8}
+numbers = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ+//"
+letter = 0
+while(letter<words.length){
+	number = words.charCodeAt(letter)
+	loc = 0
+	while(Math.pow(base,loc)<=number){
+		loc += 1}
+	loc -= 1
+	text = ""
+	while(loc>=0){
+		y = base-1
+		while(y>=0){
+			if(y*Math.pow(base,loc) <= number){
+				text += numbers.substring(y,y+1)
+				number = number - y*Math.pow(base,loc)
+				break}
+			y-=1}
+		loc -= 1}
+	while(text.length<lengthy){text = "0"+text}
+	letter += 1
+	document.All.Bits.value += text}
+}
+
+function FromBits(){
+document.All.Words.value = ""
+number = document.All.Bits.value
+base = document.All.Number.options[document.All.Number.selectedIndex].text
+numbers = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ+//"
+if(base==2){lengthy=8}
+if(base==3){lengthy=6}
+if(base>=4 && base<=6){lengthy=4}
+if(base>=7 && base<=15){lengthy=3}
+if(base>=16 && base<=64){lengthy=2}
+end = false
+start = 0
+while(start<number.length){
+	word = ""
+	while(word.length < lengthy){
+		if(numbers.indexOf(number.substring(start,start+1)) != -1){
+			word += number.substring(start,start+1)}
+		start += 1
+		if(start>number.length){break}}
+	x = 0
+	final = 0
+	loc = word.length-1
+	while(x<word.length){
+		final += StringIndex(numbers,word.charAt(x))*Math.pow(base,loc)
+		x += 1
+		loc -= 1}
+	document.All.Words.value += String.fromCharCode(final)
+	}
+}
+
+StringIndex = function(str,word){
+i = 0
+while(i+word.length<=str.length){
+if(str.substring(i,i+word.length)==word){return i}
+i += 1}
+return -1}
+</SCRIPT>
+<br/><br/>
+0100110101100001011001000110010100100000011000100111100100001010<br/>
+010100100110111101111001001000000101011101100001011011000110110001110011
+</body>
+</html>

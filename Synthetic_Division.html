@@ -1,0 +1,63 @@
+<html>
+<head>
+<title>Polynomial</title>
+<link rel="shortcut icon" href="https://www.dropbox.com/static/31335/images/favicon.ico"/>
+</head>
+<body>
+<a href=index.html>Back</a><br/>
+<input type="text" id="a" size="10" value=0>
+<input type="button" onMouseUp="SolveA()" value="Factor!"><br/>
+<textarea id="answer" rows=1 cols=20 readonly>Answer</textarea><br/>
+<br/>
+Enter the coefficients only, of the x-values in decending exponent order. (including zeros)<br/>
+Result will be real roots of the given polynomial.
+<SCRIPT LANGUAGE="Javascript">
+
+function SolveA(){
+nums = document.getElementById("a").value
+nums = nums.split(",")
+
+pn = Math.abs(parseInt(nums[nums.length-1]))
+qn = Math.abs(parseInt(nums[0]))
+p = []
+q = []
+
+if(pn<=qn){e=qn}
+else{e=pn}
+
+for(n=1;n<=e;n++){
+if(Math.floor(pn/n)*n == pn){p.push(pn/n)}
+if(Math.floor(qn/n)*n == qn){q.push(qn/n)}
+}
+
+Possible = []
+for(a=0;a<p.length;a++){
+	for(b=0;b<q.length;b++){
+		Possible.push(p[a]/q[b])
+	}
+}
+
+Possible2 = []
+for(x=0;x<Possible.length;x++){ /*Exlusive list*/
+if(Possible2.indexOf(Possible[x]) == -1){Possible2.push(Possible[x]);Possible2.push(-Possible[x])}
+}
+
+Possible2.sort(function(a, b){return a-b}) /*Numeric sort*/
+
+Solutions = []
+for(x=0;x<Possible2.length;x++){ /*Test solutions*/
+	mult = 0
+	ans = Possible2[x]
+	for(y=0;y<nums.length;y++){
+		mult = ans*mult+parseInt(nums[y])
+	}
+	if(mult==0){
+		Solutions.push(ans)
+	}
+}
+
+document.getElementById("answer").value = Solutions
+}
+</SCRIPT>
+</body>
+</html>
