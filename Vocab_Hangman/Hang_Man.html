@@ -26,49 +26,49 @@ hang = ["\
 		|\n\
 		|\n\
 		|\n\
-   _____________|_____________","\
+Â Â Â _____________|_____________","\
 	_________\n\
 	|	|\n\
 	O	|\n\
 		|\n\
 		|\n\
 		|\n\
-   _____________|_____________","\
+Â Â Â _____________|_____________","\
 	_________\n\
 	|	|\n\
 	O	|\n\
         |	|\n\
 		|\n\
 		|\n\
-   _____________|_____________","\
+Â Â Â _____________|_____________","\
 	_________\n\
 	|	|\n\
 	O	|\n\
        /|	|\n\
 		|\n\
 		|\n\
-   _____________|_____________","\
+Â Â Â _____________|_____________","\
 	_________\n\
 	|	|\n\
 	O	|\n\
        /|\\	|\n\
         	|\n\
 		|\n\
-   _____________|_____________","\
+Â Â Â _____________|_____________","\
 	_________\n\
 	|	|\n\
 	O	|\n\
        /|\\	|\n\
        /	|\n\
 		|\n\
-   _____________|_____________","\
+Â Â Â _____________|_____________","\
 	_________\n\
 	|	|\n\
 	O	|\n\
        /|\\	|\n\
        / \\	|\n\
 		|\n\
-   _____________|_____________","YOU LOSE!"]
+Â Â Â _____________|_____________","YOU LOSE!"]
 
 function FromURL(name){
 temp = String(window.location)
@@ -101,7 +101,7 @@ function Random(min,max)
 function Draw()
 	{
 	document.textform.textarea.value=''
-	document.textform.textarea.value += (hang[wrong.length]+"\n\n   "+hint+"\n\n   ")
+	document.textform.textarea.value += (hang[wrong.length]+"\n\nÂ Â Â "+hint+"\n\nÂ Â Â ")
 	x = 0
 	Winner = true
 	while(x<secret.length)
@@ -185,7 +185,7 @@ num = Random(0,secrets.length-1)
 secret = secrets[num]
 hint = hints[num]
 document.textform.Try.value = ""
-Draw()
+Draw() 
 }
 
 start()
