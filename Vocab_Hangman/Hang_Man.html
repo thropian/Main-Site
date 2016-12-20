@@ -1,0 +1,195 @@
+<html>
+<head>
+
+<SCRIPT type="text/JavaScript" src="Words.js"></script>
+
+<title>Hang-Man</title>
+<link rel="shortcut icon" href="https://www.dropbox.com/static/31335/images/favicon.ico"/>
+</head>
+<body>
+
+<a href=../index.html>Back</a>
+<form name="textform">
+<textarea name="textarea" rows="15" cols="35" readonly>
+If you can read this, you need a better browser.
+</textarea><br/>
+<textarea name = "Try" rows="1" cols="20" onkeyup="Guess(this.value)" autofocus autocomplete=off>
+</textarea>
+</FORM>
+Press enter to change words.<br/><br/>Made by Roy Walls
+
+<SCRIPT LANGUAGE="Javascript">
+hang = ["\
+	_________\n\
+	|	|\n\
+		|\n\
+		|\n\
+		|\n\
+		|\n\
+   _____________|_____________","\
+	_________\n\
+	|	|\n\
+	O	|\n\
+		|\n\
+		|\n\
+		|\n\
+   _____________|_____________","\
+	_________\n\
+	|	|\n\
+	O	|\n\
+        |	|\n\
+		|\n\
+		|\n\
+   _____________|_____________","\
+	_________\n\
+	|	|\n\
+	O	|\n\
+       /|	|\n\
+		|\n\
+		|\n\
+   _____________|_____________","\
+	_________\n\
+	|	|\n\
+	O	|\n\
+       /|\\	|\n\
+        	|\n\
+		|\n\
+   _____________|_____________","\
+	_________\n\
+	|	|\n\
+	O	|\n\
+       /|\\	|\n\
+       /	|\n\
+		|\n\
+   _____________|_____________","\
+	_________\n\
+	|	|\n\
+	O	|\n\
+       /|\\	|\n\
+       / \\	|\n\
+		|\n\
+   _____________|_____________","YOU LOSE!"]
+
+function FromURL(name){
+temp = String(window.location)
+temp = temp.substring(temp.indexOf(name)+name.length+1,temp.length)
+if(temp.indexOf("&") != -1){temp = temp.substring(0,temp.indexOf("&"))}
+return(temp)
+}
+
+if(!Array.indexOf){
+Array.prototype.indexOf = function(obj){
+i=0
+while(i<this.length){
+if(this[i]==obj){return i}
+i += 1}
+return -1}}
+
+Class = FromURL("Class")
+
+if(Class==2){Second()}
+if(Class==3){Third()}
+if(Class==4){Fourth()}
+if(Class=="Med"){Med()}
+
+function Random(min,max)
+	{
+	max -= min-1
+	return Math.floor(Math.random()*max)+min
+	}
+
+function Draw()
+	{
+	document.textform.textarea.value=''
+	document.textform.textarea.value += (hang[wrong.length]+"\n\n   "+hint+"\n\n   ")
+	x = 0
+	Winner = true
+	while(x<secret.length)
+		{
+		if(right.indexOf(secret.charAt(x)) != -1 || !(secret.charAt(x).charCodeAt() > 96 && secret.charCodeAt() < 123))
+			{
+			document.textform.textarea.value += (secret.charAt(x))
+			}
+		else
+			{
+			document.textform.textarea.value += ("_")
+			Winner = false
+			}
+		document.textform.textarea.value += (" ")
+		x += 1
+		}
+	document.textform.textarea.value += ("\n\nGuessed:\n")
+	x = 0
+	while(x<wrong.length)
+		{
+		document.textform.textarea.value += (wrong[x].toUpperCase()+" ")
+		x += 1
+		}
+	x = 0
+	if(Winner)
+		{
+		Won = true
+		document.textform.Try.value = "You Win."
+		}
+	}
+
+function Guess(letter)
+	{
+	document.textform.Try.value = ""
+	letter = letter.toLowerCase()
+	if(letter.charCodeAt(letter.length-1) == 10 && navigator.appName == "Netscape" || letter.charCodeAt(letter.length-1) == 13 && navigator.appName == "Microsoft Internet Explorer"){
+		start()
+		}
+	else if(letter.charCodeAt() > 96 && letter.charCodeAt() < 123)
+	{
+	letter = letter.substring(0,1)
+	if(!Won)
+		{
+		if(wrong.length!=6)
+			{
+			x = 0
+			while(x<secret.length)
+				{
+				if(secret.charAt(x)==letter)
+					{
+					right.push(letter)
+					}
+				x += 1
+				}
+			if(right[right.length-1] != letter && wrong.indexOf(letter) == -1)
+				{
+				wrong.push(letter)
+				}
+			if(wrong.length==6)
+				{
+				document.textform.Try.value = secret
+				}
+			Draw()
+			}
+		else
+			{
+			document.textform.Try.value = secret
+			}
+		}
+	else
+		{
+		document.textform.Try.value = "You Win."
+		}
+	}
+	}
+function start(){
+right = []
+wrong = []
+Won = false
+num = Random(0,secrets.length-1)
+secret = secrets[num]
+hint = hints[num]
+document.textform.Try.value = ""
+Draw()
+}
+
+start()
+
+</SCRIPT>
+</body>
+</html>
