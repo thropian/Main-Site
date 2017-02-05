@@ -1,0 +1,233 @@
+<html>
+<head>
+<style>
+table tr td{text-align:center;}
+</style>
+</head>
+<body>
+<div style="float:left">
+<input onclick="Roll()" oncontextmenu="Roll18()" type="button" value="Roll!">
+<table name="rolls">
+<tr><td>Stats</td>
+	<td>Str</td>
+	<td>Dex</td>
+	<td>Con</td>
+	<td>Int</td>
+	<td>Wis</td>
+	<td>Cha</td></tr>
+<tr><td id=1></td>
+	<td><input type="radio" name="S1" value="Str" onclick="Click(1,1)"/></td>
+	<td><input type="radio" name="S1" value="Dex" onclick="Click(1,2)"/></td>
+	<td><input type="radio" name="S1" value="Con" onclick="Click(1,3)"/></td>
+	<td><input type="radio" name="S1" value="Int" onclick="Click(1,4)"/></td>
+	<td><input type="radio" name="S1" value="Wis" onclick="Click(1,5)"/></td>
+	<td><input type="radio" name="S1" value="Cha" onclick="Click(1,6)"/></td></tr>
+<tr><td id=2></td>
+	<td><input type="radio" name="S2" value="Str" onclick="Click(2,1)"/></td>
+	<td><input type="radio" name="S2" value="Dex" onclick="Click(2,2)"/></td>
+	<td><input type="radio" name="S2" value="Con" onclick="Click(2,3)"/></td>
+	<td><input type="radio" name="S2" value="Int" onclick="Click(2,4)"/></td>
+	<td><input type="radio" name="S2" value="Wis" onclick="Click(2,5)"/></td>
+	<td><input type="radio" name="S2" value="Cha" onclick="Click(2,6)"/></td></tr>
+<tr><td id=3></td>
+	<td><input type="radio" name="S3" value="Str" onclick="Click(3,1)"/></td>
+	<td><input type="radio" name="S3" value="Dex" onclick="Click(3,2)"/></td>
+	<td><input type="radio" name="S3" value="Con" onclick="Click(3,3)"/></td>
+	<td><input type="radio" name="S3" value="Int" onclick="Click(3,4)"/></td>
+	<td><input type="radio" name="S3" value="Wis" onclick="Click(3,5)"/></td>
+	<td><input type="radio" name="S3" value="Cha" onclick="Click(3,6)"/></td></tr>
+<tr><td id=4></td>
+	<td><input type="radio" name="S4" value="Str" onclick="Click(4,1)"/></td>
+	<td><input type="radio" name="S4" value="Dex" onclick="Click(4,2)"/></td>
+	<td><input type="radio" name="S4" value="Con" onclick="Click(4,3)"/></td>
+	<td><input type="radio" name="S4" value="Int" onclick="Click(4,4)"/></td>
+	<td><input type="radio" name="S4" value="Wis" onclick="Click(4,5)"/></td>
+	<td><input type="radio" name="S4" value="Cha" onclick="Click(4,6)"/></td></tr>
+<tr><td id=5></td>
+	<td><input type="radio" name="S5" value="Str" onclick="Click(5,1)"/></td>
+	<td><input type="radio" name="S5" value="Dex" onclick="Click(5,2)"/></td>
+	<td><input type="radio" name="S5" value="Con" onclick="Click(5,3)"/></td>
+	<td><input type="radio" name="S5" value="Int" onclick="Click(5,4)"/></td>
+	<td><input type="radio" name="S5" value="Wis" onclick="Click(5,5)"/></td>
+	<td><input type="radio" name="S5" value="Cha" onclick="Click(5,6)"/></td></tr>
+<tr><td id=6></td>
+	<td><input type="radio" name="S6" value="Str" onclick="Click(6,1)"/></td>
+	<td><input type="radio" name="S6" value="Dex" onclick="Click(6,2)"/></td>
+	<td><input type="radio" name="S6" value="Con" onclick="Click(6,3)"/></td>
+	<td><input type="radio" name="S6" value="Int" onclick="Click(6,4)"/></td>
+	<td><input type="radio" name="S6" value="Wis" onclick="Click(6,5)"/></td>
+	<td><input type="radio" name="S6" value="Cha" onclick="Click(6,6)"/></td></tr>
+</table>
+</div>
+<SCRIPT LANGUAGE="Javascript">
+function Click(x,y){
+tr = document.getElementsByTagName("table")[0].getElementsByTagName("tr")
+for(n1=1;n1<=6;n1++){
+if(n1!=x){
+tr[n1].getElementsByTagName("td")[y].getElementsByTagName("input")[0].checked = false
+}
+}
+}
+
+function Roll(){
+totals = []
+for(t=1;t<=6;t++){
+nums = []
+for(x=1;x<=4;x++){
+nums.push(Math.floor(Math.random()*6)+1)
+}
+nums.sort(function(a,b){return a-b})
+total = nums[1]+nums[2]+nums[3]
+totals.push(total)
+}
+totals.sort(function(a,b){return b-a})
+for(n=0;n<totals.length;n++){
+document.getElementById(n+1).innerHTML = totals[n]
+totals[n] = Math.floor((totals[n]-10)/2)
+}
+if(totals[0]<=1 || totals.reduce(function(a,b){return a+b})<=0){
+console.log(totals)
+Roll()
+}
+
+}
+
+function stat(x){
+
+}
+
+function Roll18(){
+rolls = 1
+totals = [0]
+while(totals[0] != 4){Roll();rolls++}
+return rolls
+}
+
+function Roll3(){
+rolls = 1
+totals = [0,0,0,0,0,0]
+while(totals[5] != -4){Roll();rolls++}
+return rolls
+}
+
+function MinMax(){
+rolls = 1
+totals = [0,0,0,0,0,0]
+while(!(totals[5] == -4 && totals[0] == 4)){Roll();rolls++}
+return rolls
+}
+
+function Average(roll,attempts){
+scores = []
+for(trials=1;trials<=attempts;trials++){
+scores.push(roll())
+}
+return scores.reduce(function(a,b){return a+b})/attempts
+}
+</SCRIPT>
+
+<div style="float:left; margin-left:100px;">
+<table>
+<tr>
+	<th colspan=3>Point buy system</th>
+</tr>
+<tr>
+	<td id=points>25</td>
+	<td>Value</td>
+	<td>Stat</td>
+</tr>
+<tr>
+	<td><input type="button" value="+" onclick="up('Str')">
+	    <input type="button" value="-" onclick="down('Str')"></td>
+	<td id="Str-buy">8</td>
+	<td>Str</td>
+</tr>
+<tr>
+	<td><input type="button" value="+" onclick="up('Dex')">
+	    <input type="button" value="-" onclick="down('Dex')"></td>
+	<td id="Dex-buy">8</td>
+	<td>Dex</td>
+</tr>
+<tr>
+	<td><input type="button" value="+" onclick="up('Con')">
+	    <input type="button" value="-" onclick="down('Con')"></td>
+	<td id="Con-buy">8</td>
+	<td>Con</td>
+</tr>
+<tr>
+	<td><input type="button" value="+" onclick="up('Wis')">
+	    <input type="button" value="-" onclick="down('Wis')"></td>
+	<td id="Wis-buy">8</td>
+	<td>Wis</td>
+</tr>
+<tr>
+	<td><input type="button" value="+" onclick="up('Int')">
+	    <input type="button" value="-" onclick="down('Int')"></td>
+	<td id="Int-buy">8</td>
+	<td>Int</td>
+</tr>
+<tr>
+	<td><input type="button" value="+" onclick="up('Cha')">
+	    <input type="button" value="-" onclick="down('Cha')"></td>
+	<td id="Cha-buy">8</td>
+	<td>Cha</td>
+</tr>
+</table>
+</div>
+<select id="buy-amount" style="float:left;" onchange="Reset()">
+	<option value="15">Super Weak</option>
+	<option value="22">Weak</option>
+	<option value="25" selected>Standard</option>
+	<option value="28">Strong</option>
+	<option value="32">Super Strong</option>
+</select>
+
+<script language="javascript">
+function Reset(){
+	Stats = ["Str","Dex","Con","Wis","Int","Cha"]
+	for(x=0;x<6;x++){
+		document.getElementById(Stats[x]+"-buy").innerHTML = 8
+	}
+	document.getElementById("points").innerHTML = document.getElementById("buy-amount").options[document.getElementById("buy-amount").selectedIndex].value
+}
+
+function up(stat){
+points = parseInt(document.getElementById("points").innerHTML)
+ability = parseInt(document.getElementById(stat+"-buy").innerHTML)
+if(8<=ability && ability<=13 && points>=1){
+	points-=1
+	ability+=1
+}
+else if(14<=ability && ability<=15 && points>=2){
+	points-=2
+	ability+=1
+}
+else if(16<=ability && ability<=17 && points>=3){
+	points-=3
+	ability+=1
+}
+document.getElementById("points").innerHTML = points
+document.getElementById(stat+"-buy").innerHTML = ability
+}
+
+function down(stat){
+points = parseInt(document.getElementById("points").innerHTML)
+ability = parseInt(document.getElementById(stat+"-buy").innerHTML)
+if(ability>16){
+	points+=3
+	ability-=1
+}
+else if(ability>14){
+	points+=2
+	ability-=1
+}
+else if(ability>8){
+	points+=1
+	ability-=1
+}
+document.getElementById("points").innerHTML = points
+document.getElementById(stat+"-buy").innerHTML = ability
+}
+</script>
+</body>
+</html>
