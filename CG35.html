@@ -130,50 +130,6 @@ return scores.reduce(function(a,b){return a+b})/attempts
 <table>
 <tr>
 	<th colspan=3>Point buy system</th>
-</tr>
-<tr>
-	<td id=points>25</td>
-	<td>Value</td>
-	<td>Stat</td>
-</tr>
-<tr>
-	<td><input type="button" value="+" onclick="up('Str')">
-	    <input type="button" value="-" onclick="down('Str')"></td>
-	<td id="Str-buy">8</td>
-	<td>Str</td>
-</tr>
-<tr>
-	<td><input type="button" value="+" onclick="up('Dex')">
-	    <input type="button" value="-" onclick="down('Dex')"></td>
-	<td id="Dex-buy">8</td>
-	<td>Dex</td>
-</tr>
-<tr>
-	<td><input type="button" value="+" onclick="up('Con')">
-	    <input type="button" value="-" onclick="down('Con')"></td>
-	<td id="Con-buy">8</td>
-	<td>Con</td>
-</tr>
-<tr>
-	<td><input type="button" value="+" onclick="up('Wis')">
-	    <input type="button" value="-" onclick="down('Wis')"></td>
-	<td id="Wis-buy">8</td>
-	<td>Wis</td>
-</tr>
-<tr>
-	<td><input type="button" value="+" onclick="up('Int')">
-	    <input type="button" value="-" onclick="down('Int')"></td>
-	<td id="Int-buy">8</td>
-	<td>Int</td>
-</tr>
-<tr>
-	<td><input type="button" value="+" onclick="up('Cha')">
-	    <input type="button" value="-" onclick="down('Cha')"></td>
-	<td id="Cha-buy">8</td>
-	<td>Cha</td>
-</tr>
-</table>
-</div>
 <select id="buy-amount" style="float:left;" onchange="Reset()">
 	<option value="15">Super Weak</option>
 	<option value="22">Weak</option>
@@ -181,6 +137,50 @@ return scores.reduce(function(a,b){return a+b})/attempts
 	<option value="28">Strong</option>
 	<option value="32">Super Strong</option>
 </select>
+</tr>
+<tr>
+	<td id=points>25</td>
+	<td>Stat</td>
+	<td>Value</td>
+</tr>
+<tr>
+	<td><input type="button" value="+" onclick="up('Str')">
+	    <input type="button" value="-" onclick="down('Str')"></td>
+	<td>Str</td>
+	<td id="Str-buy">8</td>
+</tr>
+<tr>
+	<td><input type="button" value="+" onclick="up('Dex')">
+	    <input type="button" value="-" onclick="down('Dex')"></td>
+	<td>Dex</td>
+	<td id="Dex-buy">8</td>
+</tr>
+<tr>
+	<td><input type="button" value="+" onclick="up('Con')">
+	    <input type="button" value="-" onclick="down('Con')"></td>
+	<td>Con</td>
+	<td id="Con-buy">8</td>
+</tr>
+<tr>
+	<td><input type="button" value="+" onclick="up('Wis')">
+	    <input type="button" value="-" onclick="down('Wis')"></td>
+	<td>Wis</td>
+	<td id="Wis-buy">8</td>
+</tr>
+<tr>
+	<td><input type="button" value="+" onclick="up('Int')">
+	    <input type="button" value="-" onclick="down('Int')"></td>
+	<td>Int</td>
+	<td id="Int-buy">8</td>
+</tr>
+<tr>
+	<td><input type="button" value="+" onclick="up('Cha')">
+	    <input type="button" value="-" onclick="down('Cha')"></td>
+	<td>Cha</td>
+	<td id="Cha-buy">8</td>
+</tr>
+</table>
+</div>
 
 <script language="javascript">
 function Reset(){
