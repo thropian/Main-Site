@@ -164,7 +164,7 @@ tr:nth-child(2n+1) td:nth-child(2n+2){background: #ccc;}
 <div style='float:left'><textarea id='Dating_Timer' rows=2 cols=30 readonly></textarea></div>
 
 <SCRIPT LANGUAGE="javascript">
-Start = [2013, 8, 10]<!--Year (normal), Month (-1), Day(normal)-->
+Start = [2018, 0, 27]<!--Year (normal), Month (-1), Day(normal)-->
 Today = [2017, 8, 01]
 days = 0
 
@@ -191,7 +191,7 @@ else{<!--Less than a month.
 	days+=Today[2]-Start[2]}
 
 <!--Set message here. "+days+" will be the days remaining.-->
-document.getElementById("Dating_Timer").value = "Roy and Allie were together for "+(days+1)+" days!"
+document.getElementById("Dating_Timer").value = "Roy and Allie were together for "+(days+1+1449)+" days!" <!--1455
 if(Math.floor((days+1)/365)*365 == days+1){
 document.getElementById("Dating_Timer").value = "Happy Anniversary sweets, I'll always love you."
 document.getElementById("Title").innerHTML = "Allie Rand is the sweetest girl<br/>in the whole world!"
