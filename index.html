@@ -165,7 +165,7 @@ tr:nth-child(2n+1) td:nth-child(2n+2){background: #ccc;}
 
 <SCRIPT LANGUAGE="javascript">
 Start = [2018, 0, 27]<!--Year (normal), Month (-1), Day(normal)-->
-Today = [2017, 8, 01]
+Today = [new Date().getFullYear(),new Date().getMonth(),new Date().getDate()]
 days = 0
 
 while(Start[0]<Today[0]){Today[1]+=12;Today[0]-=1}
