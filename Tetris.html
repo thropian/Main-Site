@@ -1,8 +1,8 @@
-﻿<head>
+<head>
 </head>
 <body>
 <textarea name="game" rows="18" cols="8" style="font-size:1em; resize:none;" readonly></textarea>
-<textarea name="next" rows="4" cols="2" style="font-size:1em; resize:none;" readonly></textarea>
+<textarea name="next" rows="5" cols="2" style="font-size:1em; resize:none;" readonly></textarea>
 
 
 <script language="javascript">
@@ -105,7 +105,7 @@ function Fall(){
 		Set=DrawPiece(Pieces[Current],X,Y-1,Angle,Set)
 		Current=Next
 		Next=Math.floor(Math.random()*7)
-		//ShowNext()
+		ShowNext()
 		X=5
 		Y=1
 		Angle=0
@@ -116,7 +116,7 @@ function Fall(){
 	
 function ShowNext(){
 	temptxt = ""
-	temp = Pieces[next]
+	temp = Pieces[Next]
 	for(col=0; col<4; col++){
 		for(row=1; row<=2; row++){
 			if(temp.indexOf(col*2+row)!=-1){
@@ -128,14 +128,14 @@ function ShowNext(){
 		}
 		temptxt += "\n"
 	}
-	Next.innerHTML = temptxt.substring(0,temptxt.length)
+	NextBoard.innerHTML = temptxt.substring(0,temptxt.length)
 }
 			
 		
 
 Pieces = ["1357","1356","2456","1234","1345","1346","2345"]
 Board = document.getElementsByName("game")[0]
-Next = document.getElementsByName("next")[0]
+NextBoard = document.getElementsByName("next")[0]
 Set = ""
 X = 5
 Y = 1
