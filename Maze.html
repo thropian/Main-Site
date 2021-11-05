@@ -9,12 +9,19 @@ X=
 Y=
 <input type="text" id = "Y" size = 4 autocomplete=off value=25>
 <br/>
+Wall=
+<input type="color" id = "Wall-C" value="#000000">
+Path=
+<input type="color" id = "Path-C" value="#00FF00">
+Non=
+<input type="color" id = "None-C" value="#FF0000">
+<br/>
 <canvas id="canvas" width=10 height=10></canvas><br/>
 
 <SCRIPT LANGUAGE="Javascript">
 Wall_Color = "#000000"
-Invalid_Color = "#ffffff"
-Valid_Color = "#ffffff"
+Invalid_Color = "#000000"
+Valid_Color = "#000000"
 Grid = [25,25]
 Walls = 2
 Space = 10
@@ -24,6 +31,9 @@ back = Canvas.getContext("2d")
 Delay = 1
 
 function Setup(){
+Wall_Color = document.getElementById("Wall-C").value
+Invalid_Color = document.getElementById("None-C").value
+Valid_Color = document.getElementById("Path-C").value
 Grid[0] = document.getElementById("X").value
 Grid[1] = document.getElementById("Y").value
 Base = [(Walls+Space)*Grid[0]+Walls, (Walls+Space)*Grid[1]+Walls]
