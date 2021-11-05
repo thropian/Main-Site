@@ -1,0 +1,139 @@
+<html>
+<head>
+</head>
+<body>
+
+<input type="button" onMouseUp="Setup()" value="New Maze!">
+X=
+<input type="text" id = "X" size = 4 autocomplete=off value=25>
+Y=
+<input type="text" id = "Y" size = 4 autocomplete=off value=25>
+<br/>
+<canvas id="canvas" width=10 height=10></canvas><br/>
+
+<SCRIPT LANGUAGE="Javascript">
+Wall_Color = "#000000"
+Invalid_Color = "#ffffff"
+Valid_Color = "#ffffff"
+Grid = [25,25]
+Walls = 2
+Space = 10
+Path = new Array(Grid[0])
+Canvas = document.getElementById("canvas")
+back = Canvas.getContext("2d")
+Delay = 1
+
+function Setup(){
+Grid[0] = document.getElementById("X").value
+Grid[1] = document.getElementById("Y").value
+Base = [(Walls+Space)*Grid[0]+Walls, (Walls+Space)*Grid[1]+Walls]
+Path = new Array(Grid[0])
+X = 0
+while(X<Grid[0]){
+	Path[X] = new Array(Grid[1])
+	Y = 0
+	while(Y<Grid[1]){
+		Path[X][Y] = false
+		Y = Y+1
+		}
+	X = X+1
+	}
+Canvas.setAttribute("width", Base[0]+"px")
+Canvas.setAttribute("height", Base[1]+"px")
+clearTimeout(Timer)
+back.fillStyle = Wall_Color
+back.fillRect(0,0,Base[0],Base[1])
+
+back.fillStyle = Invalid_Color
+Y = 0
+while(Y<Grid[1]){
+	X = 0
+	while(X<Grid[0]){
+		back.fillRect((Walls+Space)*X+Walls,(Walls+Space)*Y+Walls,Space,Space)
+		X = X+1
+		}
+	Y = Y+1
+	}
+X = Math.floor(Math.random()*Grid[0])
+Y = Math.floor(Math.random()*Grid[1])
+Path[X][Y] = true
+back.fillStyle = Valid_Color
+back.fillRect((Walls+Space)*X+Walls,(Walls+Space)*Y+Walls,Space,Space)
+Grow()
+}
+
+function Grow(){
+Possible = []
+Y = 0
+while(Y<Grid[1]){
+	X = 0
+	while(X<Grid[0]){
+		if(Path[X][Y]){
+			if(X>0 && !Path[X-1][Y]){
+				Possible.push([X-1,Y])
+				}
+			if(X<Grid[0]-1 && !Path[X+1][Y]){
+				Possible.push([X+1,Y])
+				}
+			if(Y>0 && !Path[X][Y-1]){
+				Possible.push([X,Y-1])
+				}
+			if(Y<Grid[1]-1 && !Path[X][Y+1]){
+				Possible.push([X,Y+1])
+				}
+			}
+		X = X+1
+		}
+	Y = Y+1
+	}
+C1 = Possible[Math.floor(Math.random()*Possible.length)]
+Path[C1[0]][C1[1]] = true
+Possible = []
+if(C1[0]>0 && Path[C1[0]-1][C1[1]]){
+	Possible.push([C1[0]-1,C1[1]])
+	}
+if(C1[0]<Grid[0]-1 && Path[C1[0]+1][C1[1]]){
+	Possible.push([C1[0]+1,C1[1]])
+	}
+if(C1[1]>0 && Path[C1[0]][C1[1]-1]){
+	Possible.push([C1[0],C1[1]-1])
+	}
+if(C1[1]<Grid[1]-1 && Path[C1[0]][C1[1]+1]){
+	Possible.push([C1[0],C1[1]+1])
+	}
+C2 = Possible[Math.floor(Math.random()*Possible.length)]
+back.fillStyle = Valid_Color
+
+if(C1[0] < C2[0]){<!--Left of path
+	back.fillRect((Walls+Space)*C1[0]+Walls,(Walls+Space)*C1[1]+Walls,Space*2+Walls,Space)
+}
+if(C1[1] < C2[1]){<!--Above path
+	back.fillRect((Walls+Space)*C1[0]+Walls,(Walls+Space)*C1[1]+Walls,Space,Space*2+Walls)
+}
+if(C1[0] > C2[0]){<!--Right of path
+	back.fillRect((Walls+Space)*C2[0]+Walls,(Walls+Space)*C2[1]+Walls,Space*2+Walls,Space)
+}
+if(C1[1] > C2[1]){<!--Below path
+	back.fillRect((Walls+Space)*C2[0]+Walls,(Walls+Space)*C2[1]+Walls,Space,Space*2+Walls)
+}
+Stop = true
+Y = 0
+while(Y<Grid[1]){
+	X = 0
+	while(X<Grid[0]){
+		Stop = Stop && Path[X][Y]
+		X = X+1
+		}
+	Y = Y+1
+	}
+if(!Stop){
+	Timer = setTimeout(Grow, Delay)
+	}
+else{console.log("DONE!")}
+}
+
+Timer = setTimeout(Setup, 100)
+<!--setTimeout("clockTick()", 1000);-->
+</SCRIPT>
+</body>
+</html>
