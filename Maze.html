@@ -27,6 +27,9 @@ var Player_Turn = 5 <!--Turn degrees per frame-->
 var Player_Delay = 100 <!--ms delay between each player movement-->
 var Player_FoV = 45 <!--Angle for Field of View, in degrees-->
 var View_Distance = (Space+Walls)*10 <!--Maximum view distance to check, for scaling wall height-->
+var Player_X_Start = Walls+Space/2
+var Player_Y_Start = Walls+Space/2
+var Player_A_Start = 0 <!--Angle player is facing, in degrees-->
 
 var Wall_Color = "#000000"
 var Invalid_Color = "#000000"
@@ -39,9 +42,9 @@ var Map_Data = false
 var View = document.getElementById("View")
 var View_Draw = View.getContext("2d")
 var Timer = setTimeout(Setup, Delay)
-var Player_X = Walls+Space/2
-var Player_Y = Walls+Space/2
-var Player_A = 0 <!--Angle player is facing, in degrees-->
+var Player_X = 0
+var Player_Y = 0
+var Player_A = 0
 var View_Width = View.width/(Player_FoV*2+1) <!--Width of each "segment" for view drawing-->
 var Buttons = [] <!--Buttons pressed for controls-->
 
@@ -67,6 +70,9 @@ Grid[0] = document.getElementById("X").value
 Grid[1] = document.getElementById("Y").value
 Base = [(Walls+Space)*Grid[0]+Walls, (Walls+Space)*Grid[1]+Walls]
 Path = new Array(Grid[0])
+Player_X = Player_X_Start
+Player_Y = Player_Y_Start
+Player_A = Player_A_Start
 
 var X = 0
 while(X<Grid[0]){
