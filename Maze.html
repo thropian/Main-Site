@@ -16,21 +16,50 @@ Path=
 Non=
 <input type="color" id = "None-C" value="#FF0000">
 <br/>
-<canvas id="canvas" width=10 height=10></canvas><br/>
+<canvas id="View" width=300 height=300></canvas>
+<canvas id="Map" width=10 height=10></canvas><br/>
 
 <SCRIPT LANGUAGE="Javascript">
-Wall_Color = "#000000"
-Invalid_Color = "#000000"
-Valid_Color = "#000000"
-Grid = [25,25]
-Walls = 2
-Space = 10
-Path = new Array(Grid[0])
-Canvas = document.getElementById("canvas")
-back = Canvas.getContext("2d")
-Delay = 1
+var Walls = 2 <!--Wall width in pixels, for map-->
+var Space = 10 <!--Space width in pixels, for map-->
+var Delay = 1 <!--ms delay between each map growth-->
+var Player_Turn = 5 <!--Turn degrees per frame-->
+var Player_Delay = 100 <!--ms delay between each player movement-->
+var Player_FoV = 45 <!--Angle for Field of View, in degrees-->
+var View_Distance = (Space+Walls)*10 <!--Maximum view distance to check, for scaling wall height-->
+
+var Wall_Color = "#000000"
+var Invalid_Color = "#000000"
+var Valid_Color = "#000000"
+var Grid = [25,25]
+var Path = new Array(Grid[0])
+var Map = document.getElementById("Map")
+var Map_Draw = Map.getContext("2d")
+var Map_Data = false
+var View = document.getElementById("View")
+var View_Draw = View.getContext("2d")
+var Timer = setTimeout(Setup, Delay)
+var Player_X = Walls+Space/2
+var Player_Y = Walls+Space/2
+var Player_A = 0 <!--Angle player is facing, in degrees-->
+var View_Width = View.width/(Player_FoV*2+1) <!--Width of each "segment" for view drawing-->
+var Buttons = [] <!--Buttons pressed for controls-->
+
+document.onkeydown = Press
+document.onkeyup = Release
+
+function toDegree(Rad){return Rad*180/Math.PI}
+function toRadian(Deg){return Deg*Math.PI/180}
+
+function comp(C){
+var hex = C.toString(16)
+return hex.length == 1 ? "0" + hex : hex
+}
+function toHex(R,G,B){return "#"+comp(R)+comp(G)+comp(B)}
 
 function Setup(){
+clearTimeout(Timer)
+
 Wall_Color = document.getElementById("Wall-C").value
 Invalid_Color = document.getElementById("None-C").value
 Valid_Color = document.getElementById("Path-C").value
@@ -38,28 +67,30 @@ Grid[0] = document.getElementById("X").value
 Grid[1] = document.getElementById("Y").value
 Base = [(Walls+Space)*Grid[0]+Walls, (Walls+Space)*Grid[1]+Walls]
 Path = new Array(Grid[0])
-X = 0
+
+var X = 0
 while(X<Grid[0]){
 	Path[X] = new Array(Grid[1])
-	Y = 0
+	var Y = 0
 	while(Y<Grid[1]){
 		Path[X][Y] = false
 		Y = Y+1
 		}
 	X = X+1
 	}
-Canvas.setAttribute("width", Base[0]+"px")
-Canvas.setAttribute("height", Base[1]+"px")
-clearTimeout(Timer)
-back.fillStyle = Wall_Color
-back.fillRect(0,0,Base[0],Base[1])
+Map.setAttribute("width", Base[0]+"px")
+Map.setAttribute("height", Base[1]+"px")
+Map_Draw.fillStyle = Wall_Color
+Map_Draw.fillRect(0,0,Base[0],Base[1])
+View_Draw.fillStyle = Valid_Color
+View_Draw.fillRect(0,0,View.width,View.height)
 
-back.fillStyle = Invalid_Color
+Map_Draw.fillStyle = Invalid_Color
 Y = 0
 while(Y<Grid[1]){
 	X = 0
 	while(X<Grid[0]){
-		back.fillRect((Walls+Space)*X+Walls,(Walls+Space)*Y+Walls,Space,Space)
+		Map_Draw.fillRect((Walls+Space)*X+Walls,(Walls+Space)*Y+Walls,Space,Space)
 		X = X+1
 		}
 	Y = Y+1
@@ -67,16 +98,16 @@ while(Y<Grid[1]){
 X = Math.floor(Math.random()*Grid[0])
 Y = Math.floor(Math.random()*Grid[1])
 Path[X][Y] = true
-back.fillStyle = Valid_Color
-back.fillRect((Walls+Space)*X+Walls,(Walls+Space)*Y+Walls,Space,Space)
-Grow()
+Map_Draw.fillStyle = Valid_Color
+Map_Draw.fillRect((Walls+Space)*X+Walls,(Walls+Space)*Y+Walls,Space,Space)
+Timer = setTimeout(Grow, Delay)
 }
 
 function Grow(){
-Possible = []
-Y = 0
+var Possible = []
+var Y = 0
 while(Y<Grid[1]){
-	X = 0
+	var X = 0
 	while(X<Grid[0]){
 		if(Path[X][Y]){
 			if(X>0 && !Path[X-1][Y]){
@@ -96,7 +127,7 @@ while(Y<Grid[1]){
 		}
 	Y = Y+1
 	}
-C1 = Possible[Math.floor(Math.random()*Possible.length)]
+var C1 = Possible[Math.floor(Math.random()*Possible.length)]
 Path[C1[0]][C1[1]] = true
 Possible = []
 if(C1[0]>0 && Path[C1[0]-1][C1[1]]){
@@ -111,22 +142,22 @@ if(C1[1]>0 && Path[C1[0]][C1[1]-1]){
 if(C1[1]<Grid[1]-1 && Path[C1[0]][C1[1]+1]){
 	Possible.push([C1[0],C1[1]+1])
 	}
-C2 = Possible[Math.floor(Math.random()*Possible.length)]
-back.fillStyle = Valid_Color
+var C2 = Possible[Math.floor(Math.random()*Possible.length)]
+Map_Draw.fillStyle = Valid_Color
 
 if(C1[0] < C2[0]){<!--Left of path
-	back.fillRect((Walls+Space)*C1[0]+Walls,(Walls+Space)*C1[1]+Walls,Space*2+Walls,Space)
+	Map_Draw.fillRect((Walls+Space)*C1[0]+Walls,(Walls+Space)*C1[1]+Walls,Space*2+Walls,Space)
 }
 if(C1[1] < C2[1]){<!--Above path
-	back.fillRect((Walls+Space)*C1[0]+Walls,(Walls+Space)*C1[1]+Walls,Space,Space*2+Walls)
+	Map_Draw.fillRect((Walls+Space)*C1[0]+Walls,(Walls+Space)*C1[1]+Walls,Space,Space*2+Walls)
 }
 if(C1[0] > C2[0]){<!--Right of path
-	back.fillRect((Walls+Space)*C2[0]+Walls,(Walls+Space)*C2[1]+Walls,Space*2+Walls,Space)
+	Map_Draw.fillRect((Walls+Space)*C2[0]+Walls,(Walls+Space)*C2[1]+Walls,Space*2+Walls,Space)
 }
 if(C1[1] > C2[1]){<!--Below path
-	back.fillRect((Walls+Space)*C2[0]+Walls,(Walls+Space)*C2[1]+Walls,Space,Space*2+Walls)
+	Map_Draw.fillRect((Walls+Space)*C2[0]+Walls,(Walls+Space)*C2[1]+Walls,Space,Space*2+Walls)
 }
-Stop = true
+var Stop = true
 Y = 0
 while(Y<Grid[1]){
 	X = 0
@@ -139,11 +170,84 @@ while(Y<Grid[1]){
 if(!Stop){
 	Timer = setTimeout(Grow, Delay)
 	}
-else{console.log("DONE!")}
+else{
+	Map_Data = Map_Draw.getImageData(0,0,Base[0],Base[1])
+	Timer = setTimeout(See,Delay)
+	}
 }
 
-Timer = setTimeout(Setup, 100)
-<!--setTimeout("clockTick()", 1000);-->
+function See(){
+Move()
+View_Draw.fillStyle = Valid_Color
+View_Draw.fillRect(0,0,View.width,View.height)
+var A = 0-Player_FoV
+var D = 0
+var H = 0
+var X = 0
+View_Draw.fillStyle = Wall_Color
+while(A < Player_FoV){
+	D = Distance(Player_X,Player_Y,Player_A+A,View_Distance)
+	D = View_Distance-D
+	if(D<0){D=0}
+	H = View.height*(D/View_Distance)
+	View_Draw.fillRect(X,(View.height-H)/2,View_Width+1,H)
+	X = X+View_Width
+	A = A+1
+	}
+Timer = setTimeout(See,Player_Delay)
+}
+
+function Distance(X,Y,A,L){<!--Raycast from (X,Y) at angle A to max length L, returns distance to wall or L+1-->
+var D = 0
+var vX = X
+var vY = Y
+var p = 0
+while(D<=L){
+	vX = Math.floor(X+Math.cos(toRadian(A))*D)
+	vY = Math.floor(Y+Math.sin(toRadian(A))*D)
+	if(vX>=0 && vY>=0 && vX<=Base[0] && vY<=Base[0]){
+		p = (vY*Map_Data.width+vX)*4
+		if(toHex(Map_Data.data[p],Map_Data.data[p+1],Map_Data.data[p+2]) == Wall_Color){
+			break
+			}
+		}
+	else{D = L+1}
+	D = D+1
+	}
+return D
+}
+
+<!--W=87,A=65,S=83,D=68, Left=37, Up=38, Right=39, Down=40-->
+function Move(){
+if((Buttons.indexOf(87)!=-1 || Buttons.indexOf(38)!=-1) && Distance(Player_X,Player_Y,Player_A,View_Distance)>1){<!--Forward
+	Player_X = Player_X+Math.cos(toRadian(Player_A))
+	Player_Y = Player_Y+Math.sin(toRadian(Player_A))
+	}
+if((Buttons.indexOf(83)!=-1 || Buttons.indexOf(40)!=-1) && Distance(Player_X,Player_Y,(Player_A+180),View_Distance)>1){<!--Backward
+	Player_X = Player_X-Math.cos(toRadian(Player_A))
+	Player_Y = Player_Y-Math.sin(toRadian(Player_A))
+	}
+if(Buttons.indexOf(65)!=-1 || Buttons.indexOf(37)!=-1){<!--Left
+	Player_A = Player_A-Player_Turn
+	if(Player_A<0){Player_A=Player_A+360}
+	}
+if(Buttons.indexOf(68)!=-1 || Buttons.indexOf(39)!=-1){<!--Right
+	Player_A = Player_A+Player_Turn
+	if(Player_A>360){Player_A=Player_A-360}
+	}
+}
+
+function Press(e){
+var button = (window.event) ? event.keyCode : e.keyCode
+var loc = Buttons.indexOf(button)
+if(loc == -1){Buttons.push(button)}
+}
+
+function Release(e){
+var button = (window.event) ? event.keyCode : e.keyCode
+var loc = Buttons.indexOf(button)
+if(loc != -1){Buttons.splice(loc,1)}
+}
 </SCRIPT>
 </body>
 </html>
