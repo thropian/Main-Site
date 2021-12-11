@@ -23,9 +23,9 @@ Non=
 var Walls = 2 <!--Wall width in pixels, for map-->
 var Space = 10 <!--Space width in pixels, for map-->
 var Delay = 1 <!--ms delay between each map growth-->
-var Player_Turn = 5 <!--Turn degrees per frame-->
-var Player_Delay = 100 <!--ms delay between each player movement-->
-var Player_FoV = 45 <!--Angle for Field of View, in degrees-->
+var Player_Turn = 6 <!--Turn degrees per frame-->
+var Player_Delay = 75 <!--ms delay between each player movement-->
+var Player_FoV = 60 <!--Angle for Field of View, in degrees-->
 var View_Distance = (Space+Walls)*10 <!--Maximum view distance to check, for scaling wall height-->
 var Player_X_Start = Walls+Space/2
 var Player_Y_Start = Walls+Space/2
@@ -45,8 +45,11 @@ var Timer = setTimeout(Setup, Delay)
 var Player_X = 0
 var Player_Y = 0
 var Player_A = 0
-var View_Width = View.width/(Player_FoV*2+1) <!--Width of each "segment" for view drawing-->
 var Buttons = [] <!--Buttons pressed for controls-->
+var View_Width = View.width/Player_FoV <!--Width of each "segment" for view drawing-->
+var View_Dist = (View.width/2)/Math.tan(toRadian(Player_FoV/2))
+var View_Height = View.height
+var Wall_Height = View_Height*4
 
 document.onkeydown = Press
 document.onkeyup = Release
@@ -186,17 +189,24 @@ function See(){
 Move()
 View_Draw.fillStyle = Valid_Color
 View_Draw.fillRect(0,0,View.width,View.height)
-var A = 0-Player_FoV
+View_Draw.fillStyle = Invalid_Color
+View_Draw.fillRect(0,View.height/2,View.width,View.height)
+var A = 0-Player_FoV/2
 var D = 0
 var H = 0
 var X = 0
 View_Draw.fillStyle = Wall_Color
-while(A < Player_FoV){
+while(A < Player_FoV/2){
 	D = Distance(Player_X,Player_Y,Player_A+A,View_Distance)
-	D = View_Distance-D
-	if(D<0){D=0}
-	H = View.height*(D/View_Distance)
-	View_Draw.fillRect(X,(View.height-H)/2,View_Width+1,H)
+	if(D<=View_Distance){
+		<!--D = D*Math.cos(toRadian(A))
+		<!--D = View_Distance-D
+		<!--H = View.height*(D/View_Distance)
+		<!--H = Wall_Height/D*View_Dist
+		H = View_Height/View_Dist*D
+		H = Math.floor(Wall_Height/H*2)
+		View_Draw.fillRect(X,(View.height-H)/2,View_Width+1,H)
+		}
 	X = X+View_Width
 	A = A+1
 	}
@@ -214,6 +224,7 @@ while(D<=L){
 	if(vX>=0 && vY>=0 && vX<=Base[0] && vY<=Base[0]){
 		p = (vY*Map_Data.width+vX)*4
 		if(toHex(Map_Data.data[p],Map_Data.data[p+1],Map_Data.data[p+2]) == Wall_Color){
+			D = Math.sqrt((X-vX)**2+(Y-vY)**2)
 			break
 			}
 		}
