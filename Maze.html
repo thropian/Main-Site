@@ -236,11 +236,11 @@ return D
 
 <!--W=87,A=65,S=83,D=68, Left=37, Up=38, Right=39, Down=40-->
 function Move(){
-if((Buttons.indexOf(87)!=-1 || Buttons.indexOf(38)!=-1) && Distance(Player_X,Player_Y,Player_A,View_Distance)>1){<!--Forward
+if((Buttons.indexOf(87)!=-1 || Buttons.indexOf(38)!=-1) && Distance(Player_X,Player_Y,Player_A,View_Distance)>2){<!--Forward
 	Player_X = Player_X+Math.cos(toRadian(Player_A))
 	Player_Y = Player_Y+Math.sin(toRadian(Player_A))
 	}
-if((Buttons.indexOf(83)!=-1 || Buttons.indexOf(40)!=-1) && Distance(Player_X,Player_Y,(Player_A+180),View_Distance)>1){<!--Backward
+if((Buttons.indexOf(83)!=-1 || Buttons.indexOf(40)!=-1) && Distance(Player_X,Player_Y,(Player_A+180),View_Distance)>2){<!--Backward
 	Player_X = Player_X-Math.cos(toRadian(Player_A))
 	Player_Y = Player_Y-Math.sin(toRadian(Player_A))
 	}
