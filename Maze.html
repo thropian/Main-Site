@@ -224,7 +224,7 @@ while(D<=L){
 	if(vX>=0 && vY>=0 && vX<=Base[0] && vY<=Base[0]){
 		p = (vY*Map_Data.width+vX)*4
 		if(toHex(Map_Data.data[p],Map_Data.data[p+1],Map_Data.data[p+2]) == Wall_Color){
-			D = Math.sqrt((X-vX)**2+(Y-vY)**2)
+			D = Math.sqrt(Math.pow((X-vX),2)+Math.pow((Y-vY),2))
 			break
 			}
 		}
