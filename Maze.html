@@ -23,13 +23,14 @@ Non=
 var Walls = 2 <!--Wall width in pixels, for map-->
 var Space = 10 <!--Space width in pixels, for map-->
 var Delay = 1 <!--ms delay between each map growth-->
+var Move_Speed = 1 <!--Distance moved per frame-->
 var Player_Turn = 6 <!--Turn degrees per frame-->
 var Player_Delay = 75 <!--ms delay between each player movement-->
 var Player_FoV = 60 <!--Angle for Field of View, in degrees-->
-var View_Distance = (Space+Walls)*10 <!--Maximum view distance to check, for scaling wall height-->
+var Max_View = (Space+Walls)*10 <!--Maximum view distance to check-->
 var Player_X_Start = Walls+Space/2
 var Player_Y_Start = Walls+Space/2
-var Player_A_Start = 0 <!--Angle player is facing, in degrees-->
+var Player_A_Start = 270 <!--Angle player is facing, in degrees-->
 
 var Wall_Color = "#000000"
 var Invalid_Color = "#000000"
@@ -46,10 +47,10 @@ var Player_X = 0
 var Player_Y = 0
 var Player_A = 0
 var Buttons = [] <!--Buttons pressed for controls-->
-var View_Width = View.width/Player_FoV <!--Width of each "segment" for view drawing-->
+var Chunk_Width = 1
 var View_Dist = (View.width/2)/Math.tan(toRadian(Player_FoV/2))
 var View_Height = View.height
-var Wall_Height = View_Height*4
+var Wall_Height = View_Height/View_Dist*(Space*0.4)
 
 document.onkeydown = Press
 document.onkeyup = Release
@@ -191,58 +192,57 @@ View_Draw.fillStyle = Valid_Color
 View_Draw.fillRect(0,0,View.width,View.height)
 View_Draw.fillStyle = Invalid_Color
 View_Draw.fillRect(0,View.height/2,View.width,View.height)
-var A = 0-Player_FoV/2
-var D = 0
+var A = 0
+var D1 = 0
+var D2 = 0
 var H = 0
 var X = 0
 View_Draw.fillStyle = Wall_Color
-while(A < Player_FoV/2){
-	D = Distance(Player_X,Player_Y,Player_A+A,View_Distance)
-	if(D<=View_Distance){
-		<!--D = D*Math.cos(toRadian(A))
-		<!--D = View_Distance-D
-		<!--H = View.height*(D/View_Distance)
-		<!--H = Wall_Height/D*View_Dist
-		H = View_Height/View_Dist*D
-		H = Math.floor(Wall_Height/H*2)
-		View_Draw.fillRect(X,(View.height-H)/2,View_Width+1,H)
+while(X < View.width){
+	A = toDegree(Math.atan((X-View.width/2)/View_Dist))
+	D1 = Distance(Player_X,Player_Y,Player_A+A,Max_View)
+	if(D1<=Max_View){
+		D2 = View_Dist/Math.cos(toRadian(A)) <!--Correct for angle
+		H = Math.round(Wall_Height/D1*D2)
+		View_Draw.fillRect(X,(View.height-H)/2,Chunk_Width,H)
 		}
-	X = X+View_Width
-	A = A+1
+	X = X+Chunk_Width
 	}
 Timer = setTimeout(See,Player_Delay)
 }
 
 function Distance(X,Y,A,L){<!--Raycast from (X,Y) at angle A to max length L, returns distance to wall or L+1-->
 var D = 0
+var dX = Math.cos(toRadian(A))/10
+var dY = Math.sin(toRadian(A))/10
 var vX = X
 var vY = Y
 var p = 0
 while(D<=L){
-	vX = Math.floor(X+Math.cos(toRadian(A))*D)
-	vY = Math.floor(Y+Math.sin(toRadian(A))*D)
+	vX = vX+dX
+	vY = vY+dY
 	if(vX>=0 && vY>=0 && vX<=Base[0] && vY<=Base[0]){
-		p = (vY*Map_Data.width+vX)*4
+		p = (Math.floor(vY)*Map_Data.width+Math.floor(vX))*4
 		if(toHex(Map_Data.data[p],Map_Data.data[p+1],Map_Data.data[p+2]) == Wall_Color){
-			D = Math.sqrt(Math.pow((X-vX),2)+Math.pow((Y-vY),2))
+			<!--D = Math.sqrt(Math.pow((X-vX),2)+Math.pow((Y-vY),2))
 			break
 			}
 		}
-	else{D = L+1}
-	D = D+1
+	else{D = L}
+	D = D+0.1
 	}
 return D
 }
 
 <!--W=87,A=65,S=83,D=68, Left=37, Up=38, Right=39, Down=40-->
 function Move(){
-if((Buttons.indexOf(87)!=-1 || Buttons.indexOf(38)!=-1) && Distance(Player_X,Player_Y,Player_A,View_Distance)>2){<!--Forward
-	Player_X = Player_X+Math.cos(toRadian(Player_A))
-	Player_Y = Player_Y+Math.sin(toRadian(Player_A))
+if((Buttons.indexOf(87)!=-1 || Buttons.indexOf(38)!=-1) && Distance(Player_X,Player_Y,Player_A,Max_View)>Move_Speed+1){<!--Forward
+	Player_X = Player_X+Math.cos(toRadian(Player_A))*Move_Speed
+	Player_Y = Player_Y+Math.sin(toRadian(Player_A))*Move_Speed
 	}
-if((Buttons.indexOf(83)!=-1 || Buttons.indexOf(40)!=-1) && Distance(Player_X,Player_Y,(Player_A+180),View_Distance)>2){<!--Backward
-	Player_X = Player_X-Math.cos(toRadian(Player_A))
-	Player_Y = Player_Y-Math.sin(toRadian(Player_A))
+if((Buttons.indexOf(83)!=-1 || Buttons.indexOf(40)!=-1) && Distance(Player_X,Player_Y,(Player_A+180),Max_View)>Move_Speed+1){<!--Backward
+	Player_X = Player_X-Math.cos(toRadian(Player_A))*Move_Speed
+	Player_Y = Player_Y-Math.sin(toRadian(Player_A))*Move_Speed
 	}
 if(Buttons.indexOf(65)!=-1 || Buttons.indexOf(37)!=-1){<!--Left
 	Player_A = Player_A-Player_Turn
