@@ -30,7 +30,7 @@ var Player_FoV = 60 <!--Angle for Field of View, in degrees-->
 var Max_View = (Space+Walls)*10 <!--Maximum view distance to check-->
 var Player_X_Start = Walls+Space/2
 var Player_Y_Start = Walls+Space/2
-var Player_A_Start = 45 <!--Angle player is facing, in degrees-->
+var Player_A_Start = 0 <!--Angle player is facing, in degrees-->
 
 var Wall_Color = "#000000"
 var Invalid_Color = "#000000"
@@ -74,9 +74,9 @@ Grid[0] = document.getElementById("X").value
 Grid[1] = document.getElementById("Y").value
 Base = [(Walls+Space)*Grid[0]+Walls, (Walls+Space)*Grid[1]+Walls]
 Path = new Array(Grid[0])
-Player_X = Player_X_Start
-Player_Y = Player_Y_Start
-Player_A = Player_A_Start
+Player_X = Player_X_Start+Math.floor(Math.random()*Grid[0])*(Walls+Space)
+Player_Y = Player_Y_Start+Math.floor(Math.random()*Grid[1])*(Walls+Space)
+Player_A = Player_A_Start+Math.floor(Math.random()*4)*90
 
 var X = 0
 while(X<Grid[0]){
