@@ -293,11 +293,13 @@ if(loc != -1){Buttons.splice(loc,1)}
 }
 
 function ButtonDown(Button){
+console.log(Button)
 var loc = Buttons.indexOf(Button)
 if(loc == -1){Buttons.push(Button)}
 }
 
 function ButtonUp(Button){
+console.log(Button)
 var loc = Buttons.indexOf(Button)
 if(loc != -1){Buttons.splice(loc,1)}
 }
