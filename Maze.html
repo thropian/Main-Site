@@ -32,7 +32,8 @@ Non=
 <input type="color" id = "None-C" value="#FF0000">
 <br/>
 <canvas id="View" width=300 height=300></canvas>
-<canvas id="Map" width=10 height=10></canvas><br/>
+<canvas id="Map" width=10 height=10></canvas>
+<canvas id="Map_Fog" width=10 height=10></canvas><br/>
 <div class=grid-container>
 <p class="blank1"></p>
 <input type="button" onMouseUp="ButtonUp('U')" onMouseDown="ButtonDown('U')" onTouchStart="ButtonDown('U')" onTouchEnd="ButtonUp('U')" value="^" class="up">
@@ -59,7 +60,7 @@ Player.A_Start = 0
 Player.X = 0
 Player.Y = 0
 Player.A = 0 <!--Angle player is facing, in degrees-->
-Player.Size = 2 <!--Number of pixels on map-->
+Player.Size = 3 <!--Number of pixels on map-->
 
 var Wall_Color = "#000000"
 var Invalid_Color = "#000000"
@@ -69,6 +70,8 @@ var Path = new Array(Grid[0])
 var Map = document.getElementById("Map")
 var Map_Draw = Map.getContext("2d")
 var Map_Data = false
+var Map_Fog = document.getElementById("Map_Fog")
+var Map_Fog_Draw = Map_Fog.getContext("2d")
 var View = document.getElementById("View")
 var View_Draw = View.getContext("2d")
 var Timer = setTimeout(Setup, Delay)
@@ -95,6 +98,8 @@ function toRGB(Hex){return [parseInt(Hex.slice(1,3),16),parseInt(Hex.slice(3,5),
 function Setup(){
 clearTimeout(Timer)
 
+Map.hidden = false
+
 Wall_Color = document.getElementById("Wall-C").value
 Invalid_Color = document.getElementById("None-C").value
 Valid_Color = document.getElementById("Path-C").value
@@ -116,6 +121,10 @@ while(X<Grid[0]){
 		}
 	X = X+1
 	}
+Map_Fog.setAttribute("width", Base[0]+"px")
+Map_Fog.setAttribute("height", Base[1]+"px")
+Map_Fog_Draw.fillStyle = Wall_Color
+Map_Fog_Draw.fillRect(0,0,Base[0],Base[1])
 Map.setAttribute("width", Base[0]+"px")
 Map.setAttribute("height", Base[1]+"px")
 Map_Draw.fillStyle = Wall_Color
@@ -209,16 +218,20 @@ if(!Stop){
 	Timer = setTimeout(Grow, Delay)
 	}
 else{
+	Map.hidden = true
 	Map_Data = Map_Draw.getImageData(0,0,Base[0],Base[1])
 	Timer = setTimeout(See,Delay)
 	}
 }
 
 function See(){
-Map_Draw.putImageData(Map_Data,0,0)
+<!--Map_Draw.putImageData(Map_Data,0,0)
+Map_Fog_Draw.drawImage(Map,Math.floor(Player.X-Player.Size/2),Math.floor(Player.Y-Player.Size/2),Math.ceil(Player.Size/2),Math.ceil(Player.Size/2),Math.floor(Player.X-Player.Size/2),Math.floor(Player.Y-Player.Size/2),Math.ceil(Player.Size/2),Math.ceil(Player.Size/2))
 Move()
-Map_Draw.fillStyle = Invalid_Color
-Map_Draw.fillRect(Math.floor(Player.X),Math.floor(Player.Y),Player.Size,Player.Size)
+<!--Map_Draw.fillStyle = Invalid_Color
+<!--Map_Draw.beginPath()
+<!--Map_Draw.arc(Math.floor(Player.X),Math.floor(Player.Y),Player.Size/2,0,2*Math.PI)
+<!--Map_Draw.fill()
 View_Draw.fillStyle = Valid_Color
 View_Draw.fillRect(0,0,View.width,View.height)
 View_Draw.fillStyle = Invalid_Color
@@ -233,13 +246,32 @@ while(X < View.width){
 	A = toDegree(Math.atan((X-View.width/2)/View_Dist))
 	D1 = Distance(Player.X,Player.Y,Player.A+A,Player.Max_View,Wall_Color)
 	if(D1>0){
+		Reveal(Player.X,Player.Y,Player.A+A,D1,Map_Fog_Draw)
 		D2 = View_Dist/Math.cos(toRadian(A)) <!--Correct for angle
 		H = Math.round(Wall_Height/D1*D2)
 		View_Draw.fillRect(X,(View.height-H)/2,Chunk_Width,H)
 		}
 	X = X+Chunk_Width
 	}
+Map_Fog_Draw.fillStyle = Invalid_Color
+Map_Fog_Draw.fillRect(Math.floor(Player.X-Player.Size/2),Math.floor(Player.Y-Player.Size/2),Math.ceil(Player.Size/2),Math.ceil(Player.Size/2))
 Timer = setTimeout(See,Player.Delay)
+}
+
+function Reveal(X,Y,A,D,C){<!--Draws pixel from raycast (X,Y) at angle A to distance D onto canvas C-->
+var Xf = X
+var Yf = Y
+var dX = Math.cos(toRadian(A))
+var dY = Math.sin(toRadian(A))
+var n = 0
+while(n<D){
+	Xf = Math.floor(X)
+	Yf = Math.floor(Y)
+	C.drawImage(Map,Xf,Yf,1,1,Xf,Yf,1,1)
+	n = n + 1
+	X = X + dX
+	Y = Y + dY
+	}
 }
 
 function Distance(X,Y,A,L,T){<!--Raycast from (X,Y) at angle A to target color T up to max length L, returns distance or -1-->
