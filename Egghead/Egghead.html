@@ -1,0 +1,118 @@
+<html>
+<head>
+<style>
+table {
+  border: 1px solid black;
+  min-height:600px;
+}
+td {
+  border: 1px solid black;
+  text-align:center;
+  vertical-align:center;
+  min-width:100px;
+  font: 32px "Times New Roman";
+}
+tr {
+  min-height:100px;
+}
+</style>
+</head>
+<body>
+
+<table>
+<tr><td id=Num1 rowspan=2></td><td id=Num5></td><td id=Egg1 onClick="set_Color(this.id)"></td><td id=Egg2 onClick="set_Color(this.id)"></td><td id=Egg3 onClick="set_Color(this.id)"></td><td id=Egg4 onClick="set_Color(this.id)"></td></tr>
+<tr>                           <td id=Num6></td><td id=Egg5 onClick="set_Color(this.id)"></td><td id=Egg6 onClick="set_Color(this.id)"></td><td id=Egg7 onClick="set_Color(this.id)"></td><td id=Egg8 onClick="set_Color(this.id)"></td></tr>
+<tr><td id=Num2 rowspan=2></td><td id=Num7></td><td id=Egg9 onClick="set_Color(this.id)"></td><td id=Egg10 onClick="set_Color(this.id)"></td><td id=Egg11 onClick="set_Color(this.id)"></td><td id=Egg12 onClick="set_Color(this.id)"></td></tr>
+<tr>                           <td id=Num8></td><td id=Egg13 onClick="set_Color(this.id)"></td><td id=Egg14 onClick="set_Color(this.id)"></td><td id=Egg15 onClick="set_Color(this.id)"></td><td id=Egg16 onClick="set_Color(this.id)"></td></tr>
+<tr><td id=Level rowspan=2 colspan=2></td>      <td id=Num9></td>                              <td id=Num10></td>                             <td id=Num11></td>                             <td id=Num12></td></tr>
+<tr>                                            <td id=Num3 colspan=2></td>                                                                   <td id=Num4 colspan=2></td>
+</table>
+
+<input type=number id=Level_Select min=1 max=40 value=1><input type=submit onclick="set_Level();">
+
+<table style="min-height:100px">
+<tr><td id=red style="background:url(Egg.png) red" onClick="pick_Color(this.id)">4</td>
+<td id=blue style="background:url(Egg.png) blue" onClick="pick_Color(this.id)">4</td>
+<td id=green style="background:url(Egg.png) green" onClick="pick_Color(this.id)">4</td>
+<td id=yellow style="background:url(Egg.png) yellow" onClick="pick_Color(this.id)">4</td>
+<td id=white style="background-color:white" onClick="pick_Color(this.id)"></td></tr>
+</table>
+<SCRIPT LANGUAGE="Javascript">
+var Level_Codes = ["","y4r4y2g2b4y4r4g4r1b1b1g1 1","r4y2g2r2r4y2g4y2b2b2y2y2 2","r2b2g3g1y2r1b1g2g3b4y3r4 3","g2g2b2b2b2g1g1b2g4b2r4y2 4","b1b3b3r3b1g4r1y4b2g1y1r2 5","r2b3r2r2y4b1r2b2g1b3g3y1 6","r4y4r4b4g2r2g2b1y2g1b3g2 7","r1b1b3g2b3g4r3y4y1r1g1b1 8","g3y2g3y4r1b1r3y2r1b4r2y3 9","y3b4b4y4y2g2r2g1b2r1y3r2 10","r2y2b4r4y2r2y2r2y2b4g2r2 11","b4r4b2y2g2b2g2r4y2b2g2b2 12","r2y2r4y4y2g3r2y2g2g1b2y2 13","g2y4b4r4r2b2g2y2y2b3y2r3 14","b3y4r4b3r2b3r2y3b1y1y1y2 15","g4y4b4r4g3b2r2y2b2y2g2y1 16","y4g4y2g2r2y3r2g3g2r2y2r2 17","r4b2y4r2b1r3y2b2y3r2b2b1 18","g3b2b4r4r2g2y3b2b3y2y1y1 19","y2r4y4g3b2b2y2r3b2r1r2b2 20","b4y4y4g2r1b3r1r2g1r1r2b2 21","r4b4y2b1y1g2g1b1r2y1r2b1 22","g2y4r4g2r2b3r2y2b1y1y2g1 23","r3y4g4b4r1g2b1y3g2y2y1b2 24","y4r2b4y3b1y3g2b1b1y1r2y1 25","b2r2r1g3r1b2g3r1y3r1r2b2 26","r3y4y2g3g2r3y3b2b1r2y2g1 27","y4g3y2r4y3g1r2r1y2g3r2g1 28","g4y2b3y3g2r2r2y2r2g2r2y2 29","r4g4b1r3y2r3g3b2r1y1r1b2 30","r3g4b4g3b2y1g1r1y2g1r2g2 31","b2r4r2y2y2g2g2r2b2g2r2y2 32","r3g3g3b3r1y2g3y2y1r3y2b2 33","y3g3r2y2y2b2r3r1g1b2g3y2 34","b3y4r2g3b3r3y3g3b2y1g2r1 35","b3r1r2y3r3y1y3g3g2b1r2b1 36","y1b3r3b4g3r2y2g1y1y2b3g2 37","b1r2g1y2g3y2b3r2b1y2g1r2 38","r1g3g1r3r1b1r1y2g1b1y1r1 39","g3b3b2y4b1y1r1b1g1r1r2b1 40"]
+var Color_Picked = "red"
+
+
+function set_Level()
+{
+var Level_Num = document.getElementById("Level_Select").value
+if(!(Level_Num>=1 && Level_Num<=40)){Level_Num = 1}
+var color = "r"
+var number = 1
+var space
+var x = 0
+while(x<12){
+	color = Level_Codes[Level_Num].substr(x*2,1)
+	switch (color){
+		case "r":
+			color = "Red"
+			break
+		case "g":
+			color = "Green"
+			break
+		case "b":
+			color = "Blue"
+			break
+		case "y":
+			color = "Yellow"
+			break
+		}
+	number = Level_Codes[Level_Num].substr(x*2+1,1)
+	space = document.getElementById("Num"+(x+1))
+	console.log("Num"+x+", "+color+", "+number)
+	space.innerHTML = number
+	space.style.background = "url('Circle.png') center center no-repeat "+color
+	x+=1
+	}
+x = 1
+while(x<=16){
+	space = document.getElementById("Egg"+x)
+	space.style.background = "url('Egg.png') center center white"
+	x+=1
+	}
+document.getElementById("red").innerHTML = 4
+document.getElementById("blue").innerHTML = 4
+document.getElementById("green").innerHTML = 4
+document.getElementById("yellow").innerHTML = 4
+console.log(Level_Codes[Level_Num])
+}
+
+function set_Color(id){
+	var space = document.getElementById(id)
+	var old_color = space.style.backgroundColor
+	var egg_count = 0
+	if(old_color != "white"){
+		egg_count = parseInt(document.getElementById(old_color).innerHTML)
+		egg_count += 1
+		document.getElementById(old_color).innerHTML = egg_count
+	}
+	if(Color_Picked != "white"){
+		egg_count = parseInt(document.getElementById(Color_Picked).innerHTML)
+		if(egg_count>0){
+			space.style.background = "url('Egg.png') center center "+Color_Picked
+			egg_count -= 1
+			document.getElementById(Color_Picked).innerHTML = egg_count
+		}
+	}
+	else{
+		space.style.background = "url('Egg.png') center center "+Color_Picked
+	}
+}
+
+function pick_Color(id){
+	Color_Picked = id
+}
+
+set_Level()
+</SCRIPT>
+</body>
+</html>
