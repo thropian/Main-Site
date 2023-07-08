@@ -1,0 +1,167 @@
+<HTML>
+<head>
+<title>Session Zero</title>
+<style>
+textarea{
+width: 100%;
+height: 95%;
+font-size: 1.5em;
+}
+</style>
+</head>
+<body>
+
+<input type="button" onClick="Draw('H')"  value="♥ - Happiness">
+<input type="button" onClick="Draw('C')"  value="♣ - Bonds">
+<input type="button" onClick="Draw('S')"  value="♠ - Sadness">
+<input type="button" onClick="Draw('D')"  value="♦ - Character">
+<input type="button" onClick="Draw('B')"  value="♫ - Beliefs and Views">
+<input type="button" onClick="Draw('M')"  value="? - Memories and Facets">
+<input type="button" onClick="Reset()"  value="Reset">
+<br/>
+<textarea id="Questions" readonly></textarea>
+
+<SCRIPT LANGUAGE="Javascript">
+var HeartQ = []
+var DiamondQ = []
+var ClubQ = []
+var SpadeQ = []
+var BeliefQ = []
+var MemoryQ = []
+var TextBox = document.getElementById("Questions")
+
+function Reset(){
+TextBox.value = ""
+
+HeartQ = 
+	["A - There was someone with whom you shared your heart.\nDescribe your first love: Did they feel the same way? What about them did you love most?",
+	"2 - A certain sound always makes you smile.\nWhat sound is it? How did it come to be of comfort to you? Is it something you still hear now that you have begun to travel?",
+	"3 - You carry a lucky charm with you everywhere you go.\nWhat is it? How did it come into your possession? Why do you consider it lucky?",
+	"4 - Not all failures are ruinous.\nWhat failure did you learn something from? How did failing make you stronger? Do you remember it with fondness or embarrassment?",
+	"5 - Your hometown was famous for a great festival.\nWhat was the festival celebrating? What kind of festivities were there? How did this shape you growing up?",
+	"6 - There was a birth you remember with great happiness.\nWhose birth was exceptionally meaningful to you? What do you remember most about them being born? Why were they so important to you?",
+	"7 - You had a stalwart companion growing up.\nDescribe your childhood pet. How did they come to be your companion? Are they still your pet?",
+	"8 - Before you were an adventurer, you had other pastimes.\nWhat was your favorite hobby? Were you always good at it? Do you still practice it now that you are an adventurer?",
+	"9 - Everyone has their tales of triumph.\nWhat story from your pre adventuring days are you most proud of? Why? Do you still tell it?",
+	"10 - Birthdays are a cause of great celebration.\nDescribe your most memorable birthday. What birthday was it? What made it so memorable?",
+	"J - While on the road, you have a memory that keeps your spirits up during tough times.\nWhat is your happiest memory? When did it take place? What about it makes it stay with you through the years?",
+	"Q - An advantageous meeting has stuck with you throughout the years.\nWho did you meet? Why was it so significant? Do you still correspond with this person?",
+	"K - Everyone remembers their first kiss.\nWho was it with? When did it happen? What were the circumstances around it?"]
+DiamondQ =
+	["A - More than anything…\nWhat is your greatest desire? What will it take to achieve it? What would you give up to see it realized?",
+	"2 - Even the bravest of adventurers have fears.\nWhat is your greatest fear? What caused you to fear it? How do you cope when faced with it?",
+	"3 - Everybody cries.\nWhen did you last cry? What caused it? Does it cause your shame or pride to have shown emotion that way?",
+	"4 - We all have our secrets.\nWhat is your biggest secret? How long have you been keeping it? What would you do if it were found out?",
+	"5 - Old habits die hard.\nWhat is your worst habit? How long have you had it? Have you ever tried to break yourself of it?",
+	"6 - There’s always something…\nWhat is your biggest regret? What about it leaves you unable to move on? Are there circumstances in which you could forgive yourself?",
+	"7 - Just one thing.\nIf you could change one thing about yourself what would it be? Why? How would this change affect your life?",
+	"8 - Head in the clouds? Or feet on the ground?\nAre you a realist or an idealist? How did this shape you growing up? How does this affect you in your travels?",
+	"9 - A chink in the armor.\nWhat is your greatest weakness? Has it always been that way? What do you do to compensate for this weakness?",
+	"10 - The pen? Or the sword?\nDo you use words or actions to fight? In your mind why is that the more effective option? Do you ever waiver in your choice?",
+	"J - Everybody has their reasons.\nWhy did you take up the life of an adventurer? Was it a hard decision?What did you leave behind when you left?",
+	"Q - Scars are stories.\nWhat is your most notable scar? How did you get it? Is it brandished as a mark of pride or hidden as a mark of shame?",
+	"K - Nobody’s perfect.\nWhat is the biggest lie you ever told? Who did you tell it to? Why did you do it?"]
+ClubQ =
+	["A - A powerful entity once made itself known to you.\nWhat circumstances led to this meeting? Who was the entity? What did this meeting entail?",
+	"2 - You remember someone from your early days of adventuring.\nWho was the first person you befriended on your journey? Under what circumstances did you meet them? Are you still in touch?",
+	"3 - Regardless of what life brings, you will always have your sibling.\nHow many siblings do you have? What is your relationship with them like? Now that you have become an adventurer, how has this affected them?",
+	"4 - Your early days were shaped by the presence of a guardian.\nWho was this guardian? How did they come to watch over you? What is your strongest memory about your time together?",
+	"5 - A friendly shopkeeper once helped you prepare for an adventurer’s life.\nWho were they? Where did you encounter them? What about your interaction has stayed with you?",
+	"6 - A former love is still part of your life.\nHow long ago were you in love? What did you love most about them? How did it come to end between the two of you?",
+	"7 - You will always remember your childhood best friend.\nHow did you come to be friends? What is your favorite memory together? How do you keep in touch now that you are travelling?",
+	"8 - Early in your travels a barkeeper offered important information.\nWhy did you need their assistance? What information did they provide to you? Did it come at a cost?",
+	"9 - A mentor or teacher helped shape your childhood.\nWhat did they teach you? How long were you under their tutelage? What was the most valuable lesson you learned from them?",
+	"10 - You have fond memories of a former classmate\nHow long were you classmates? What about them helped shape your days before adventuring? What became of them?",
+	"J - You are no stranger to rivalry.\nWho is your rival? How did they come to be that? What makes your rivalry so important to you?",
+	"Q - At one time an authority figure had a great effect on you.\nWho were they? Where did you encounter them? What about this encounter has stayed with you over time?",
+	"K - You will always be a reflection of your parentage.\nWhat was your relationship with your parents like growing up? What is it like now?"]
+SpadeQ =
+	["A - You can never forget what was stolen from you.\nWhat was taken from you? By whom? Will you ever be able to get it back?",
+	"2 - You cannot let go of what you consider your greatest failure.\nWhat did you fail at? Who was affected by it? Why can’t you let it go?",
+	"3 - Better to have loved and lost…\nWho is your lost love? Why were they lost to you? Do you still love them?",
+	"4 - A natural disaster took something from you.\nWhat type of disaster was it? What was lost to you? Is it likely to happen again?",
+	"5 - Death steals from all of us.\nWhat family member did death take from you? When did it happen? What were the circumstances surrounding their death?",
+	"6 - Even the closest of friendships is not safe from death.\nWho did you lose? How did you know them? Could you have prevented their death?",
+	"7 - You mentor met with an unfortunate end.\nWho were they? What did they teach you? How did they die?",
+	"8 - Your country was not a stranger to war.\nHow long ago was the war or is it still being waged? How closely did it battles come to your hometown? How did it affect your life?",
+	"9 - Your hometown once fell under attack.\nHow long ago was this attack? Who launched the attack? What were the consequences?",
+	"10 - A misstep in your early adventuring days cost you dearly.\nWhat happened? What were the consequences? What did you learn as a result?",
+	"J - You left someone dear behind when you set off on your adventure.\nWho did you leave? What did they do to try and stop you from going? Do you regret leaving them behind?",
+	"Q - Not all beliefs last forever.\nWhat do you no longer believe in? What course of actions caused you to lose your belief? Why was that belief important to you?",
+	"K - Inaction is not without its consequences.\nWhat didn’t you do that needed to be done? Why couldn’t you act when you needed to? What were the consequences of your inaction?"]
+BeliefQ = 
+	["A - Lone Wolf or Part of the Pack?\nDo you feel more comfortable alone or in a crowd? Does that change based where you are or who you’re with? How does that affect your adventuring?",
+	"2 - Half Empty? Or Half Full?\nAre you an optimist or a pessimist? Has that changed since your adventuring began? Do you think that mindset is beneficial?",
+	"3 - Someone Watching Over You\nDo you believe in God or a Higher Power? Have you always? Has your relationship with them changed?",
+	"4 - Worth Dying For\nWhat would you be willing to die for? Why? Do you think it will ever come to that?",
+	"5 - Heart on Your Sleeve\nDo you share or hide your emotions? Have you always been that way? Does it change based on who you are with?",
+	"6 - Seeing the Good\nDo you believe there is good in all people? Do you think anyone is beyond redemption? Are there any exceptions to this belief?",
+	"7 - At First Sight\nDo you believe in love at first sight? Has it happened to you? If you don’t, how do you feel about those who do?",
+	"8 - Before You Leap\nDo you look before you leap? Have you always been that cautious? Has it gotten you in trouble before?",
+	"9 - Fool Me Once...\nWhat is the biggest lie you ever believed? Who told it? What was the outcome?",
+	"10 - Confidence is Key\nWhat makes you feel most confident? Is it something physical or mental? Do you have difficulty feeling confident?",
+	"J - The Most Redeeming Quality\nWhat do you think is the most important quality in a person? Why do you think that? Do you find most people have that trait?",
+	"Q - Root of All Evil\nHow do you feel about money? Do you live to make it or make it to live? Did your upbringing shape your feelings towards it?", 
+	"K - Seeing Red\nWhat makes you angrier than anything else? Why? Do you have a way to calm yourself when you get angry?"]
+MemoryQ =
+	["A - Promises Made and Kept\nWhat was the last promise you made? Who was it with? Did you keep it?",
+	"2 - Also Known As\nDo you have an alias? Why did you need one? Do you still use it?",
+	"3 - You Received Words of Wisdom\nWhat is the best advice you ever received? Who gave it to you? Did you follow it?",
+	"4 - You Keep Something Precious Close to You\nWhat is your prized possession? Where did you get it? Why is it important to you?",
+	"5 - You had a Near Death Experience\nWhat happened? How did you survive? How has it changed you?",
+	"6 - You Have a Hidden Talent\nWhat is your hidden talent? How long have you been able to do it? Has it benefited you?",
+	"7 - Perchance, to Dream\nDo you dream? What is the best dream you remember? What is the worst nightmare you remember?",
+	"8 - Your Greatest Strength\nWhat is your greatest strength? Has it always been your strength? How did you discover it?",
+	"9 - An Experience with Magic Shaped You\nWhat was your first experience with magic? Was it positive or negative? How did it affect you?",
+	"10 - You Still Remember A Difficult Decision\nWhat was the toughest choice you ever made? What were the results? Do you regret it?",
+	"J - You Have a Way of Taking the Edge Off\nWhat do you do to relax? Do you still find time to do it? Has it always been what relaxes you?",
+	"Q - What’s in a Name?\nDo you like your name? Is there a meaning behind it? Would you change it if you could?",
+	"K - Everyone has their Vices\nWhat is your biggest vice? How long has it been your vice? Has it gotten you in trouble before?"]
+}
+
+function Draw(Set){
+	var Deck = []
+	var Symbol = ""
+	var Card = ""
+	var CardLoc = -1
+	switch(Set){
+	case "H":
+		Deck = HeartQ
+		Symbol = "♥"
+		break
+	case "D":
+		Deck = DiamondQ
+		Symbol = "♦"
+		break
+	case "C":
+		Deck = ClubQ
+		Symbol = "♣"
+		break
+	case "S":
+		Deck = SpadeQ
+		Symbol = "♠"
+		break
+	case "B":
+		Deck = BeliefQ
+		Symbol = "♫"
+		break
+	case "M":
+		Deck = MemoryQ
+		Symbol = "?"
+		break
+	default:
+		console.log("Unknown button pressed: "+Set)
+		break
+	}
+	if(Deck.length>0){
+		CardLoc = Math.floor(Math.random()*Deck.length)
+		Card = Deck.at(CardLoc)
+		Deck.splice(CardLoc,1)
+		TextBox.value += Symbol+Card+"\n"
+	}
+}
+
+Reset()
+</SCRIPT>
+</body>
+</HTML>
